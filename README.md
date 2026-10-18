@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ELITE STARS | نجوم الأسبوع
+### كوكبة التميز المدرسي الرقمية
 
-## Getting Started
+تطبيق ويب رقمي ملكي متكامل واحترافي مستوحى بدقة بصرية متناهية من التصميم المرجعي المعتمد للاحتفاء بـ 24 طالباً متميزاً أسبوعياً في المدرسة عبر كوكبة سماوية تفاعلية وبطاقات تكريم ملكية قابلة للتحميل والمشاركة.
 
-First, run the development server:
+---
 
+## 🌟 الميزات الرئيسية (Core Features)
+
+1. **إعادة بناء بصرية مطابقة للتصميم المرجعي (Approved Reference Match)**:
+   - سمات لونية فاخرة: كحلي داكن (`#061325`)، أزرق منتصف الليل (`#071B37`)، ولمسات ذهب الشامبانيا والذهب البراق (`#FFD884` / `#EFC16C`).
+   - خطوط عربية ملكية فائقة الجمال (Cairo و IBM Plex Sans Arabic).
+   - خلفية سديم كوني ناعمة وغبار نجمي تفاعلي متحرك عبر Canvas.
+
+2. **كوكبة سماوية تفاعلية مركزية (Interactive Constellation)**:
+   - كوكبة دائرية هندسية باستخدام عناصر DOM و SVG حقيقية بدون لقطات ثابتة.
+   - إطارات ذهبية مزدوجة متوهجة حول صور الطلاب ونجمات رباعية متلألئة.
+   - هندسة اتصالات ذهبية متوهجة وتأثيرات نبض ضوئي سلسة.
+   - لافتات مجالات التميز المدرسية: (التفوق الأكاديمي 🎓، القيادة والمبادرة 📖، الإبداع والابتكار 💡، خدمة المجتمع 🌱، الأخلاق والقيم 🤍).
+
+3. **معمارية الكوكبة المتجاوبة للهاتف (Mobile Constellation Architecture)**:
+   - تقسيم الـ 24 طالباً على 4 كواكب متوازنة بصرياً (6 طلاب لكل مجموعة) لتفادي الازدحام على شاشات الجوال (390×844 و 430×932):
+     - **كوكبة الإشراق** (المجموعة 1)
+     - **كوكبة الإبداع** (المجموعة 2)
+     - **كوكبة العطاء** (المجموعة 3)
+     - **كوكبة الروّاد** (المجموعة 4)
+   - دعم التبديل السلس بين المجموعات (السابقة / التالية) ومؤشر واضح للكوكبة المعروضة.
+   - إمكانية التبديل إلى "الكوكبة الكاملة (Universe View)" على الأجهزة المكتبية.
+   - مساواة كاملة في التكريم والتقدير لجميع الطلاب دون أي نقاط أو ترتيب تفاضلي.
+
+4. **لوحة وبطاقة التكريم الملكية (Student Recognition Panel)**:
+   - إطار ذهبي مزدوج مع زخارف الزوايا الفلكية.
+   - هالة ذهبية مشعة خلف صورة الطالب يتوجها نجم خماسي براق.
+   - وشاح ذهبي مجسم أسفل الصورة يحمل عبارة **«نجم الأسبوع»**.
+   - الاسم الكامل والصف الدراسي (مثل: **أحمد العتيبي** • **الفصل 2/ب**).
+   - صندوق التهنئة محاطاً بعلامات التنصيص الذهبية `“”`.
+   - 3 أوسمة تكريمية رئيسية (القدوة الحسنة ⭐، مساعدة الآخرين 👥، التفوق الأكاديمي 📖).
+   - تأثير احتفالي مبهج (Confetti) عند فتح بطاقة الطالب.
+
+5. **توليد بطاقة تكريم حقيقية قابلة للتحميل (Downloadable PNG Card)**:
+   - توليد بطاقة تهنئة فائقة الدقة (1080×1440) بصيغة PNG عبر Canvas مع دعم كامل للنصوص والخطوط العربية.
+   - دعم المشاركة الفورية عبر واجهة Web Share API أو نسخ الرابط.
+
+6. **لوحة الإدارة الأسبوعية (Admin Dashboard)**:
+   - تسجيل دخول آمن للمشرفين (كلمة المرور الافتراضية للنموذج: `admin123`).
+   - إضافة وتعديل وحذف الطلاب المكرمين.
+   - رفع الصور أو اختيار نماذج واقعية معتمدة.
+   - إنشاء وإصدار أسابيع دراسية جديدة بضغطة زر وتحديث الموقع العام تلقائياً دون تعديل أي سطر برمجي.
+   - تخصيص هوية وشعار ورسالة المدرسة.
+
+7. **وضع التجربة والإنتاج (Demo & Production Mode)**:
+   - التطبيق جاهز فوراً للعمل محلياً أو تجريبياً بـ 24 سجلاً افتراضياً واقعياً لطلاب المرحلة الابتدائية وصورهم.
+   - تكامل كامل مع Supabase PostgreSQL وتوفر سياسات الأمان على مستوى الصف (RLS).
+
+---
+
+## 🛠 التقنيات المستخدمة (Tech Stack)
+
+- **Next.js 16 (App Router)** & **React 19**
+- **TypeScript** & **Tailwind CSS v4**
+- **Framer Motion** & **Canvas Starlight Engine**
+- **Lucide Icons**
+- **Supabase PostgreSQL & Storage**
+- **Canvas PNG Generator**
+
+---
+
+## 🚀 التشغيل المحلي (Quick Start)
+
+### 1. تثبيت الحزم:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. تشغيل السيرفر المحلي:
+```bash
+npm run dev
+```
+افتح المتصفح على: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. بناء نسخة الإنتاج:
+```bash
+npm run build
+npm run start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🔒 إعداد قاعدة بيانات Supabase (اختياري للإنتاج)
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. أنشئ مشروعاً جديداً على [Supabase](https://supabase.com).
+2. افتح **SQL Editor** ونفذ ملف الترحيل الموجود في:
+   `supabase/migrations/20261018000000_init_elite_stars.sql`
+3. قم بنسخ المتغيرات إلى ملف `.env.local`:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+*ملاحظة: في حال عدم إدخال مفاتيح Supabase، سيعمل التطبيق تلقائياً وبكفاءة 100% في وضع التخزين المحلي الآمن (Local Demo Mode).*
