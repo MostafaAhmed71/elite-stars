@@ -273,9 +273,9 @@ export default function SchoolCertificateModal({
                   </g>
                 </svg>
 
-                {/* Circular Portrait Frame with Polished Gold Medal Bezel */}
-                <div className="relative w-26 h-26 sm:w-30 sm:h-30 rounded-full p-1 bg-gradient-to-tr from-[#996515] via-[#F3E5AB] to-[#C59B27] shadow-[0_8px_25px_rgba(11,37,69,0.35)]">
-                  <div className="relative w-full h-full rounded-full overflow-hidden bg-white border-2 border-[#D4A853]">
+                {/* Square Portrait Frame with Polished Gold Bezel & Filigree Corners */}
+                <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl p-1 bg-gradient-to-tr from-[#996515] via-[#F3E5AB] to-[#C59B27] shadow-[0_8px_25px_rgba(11,37,69,0.35)]">
+                  <div className="relative w-full h-full rounded-xl overflow-hidden bg-white border-2 border-[#D4A853]">
                     <Image
                       src={student.avatarUrl || '/images/students/omar-ahmed.jpg'}
                       alt={student.fullName}
@@ -284,6 +284,11 @@ export default function SchoolCertificateModal({
                       priority
                     />
                   </div>
+                  {/* Subtle gilded corner accents */}
+                  <div className="absolute -top-1 -left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-[#D4A853]" />
+                  <div className="absolute -top-1 -right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-[#D4A853]" />
+                  <div className="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b-2 border-l-2 border-[#D4A853]" />
+                  <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b-2 border-r-2 border-[#D4A853]" />
                 </div>
 
 

@@ -200,36 +200,35 @@ export async function generateStudentCardPNG(
     ctx.restore();
   }
 
-  // Circular Portrait
+  // Square Portrait with Gold Frame
+  const squareSize = portraitRadius * 2;
+  const squareX = portraitX - portraitRadius;
+  const squareY = portraitY - portraitRadius;
+  const cornerRadius = 24;
+
   try {
     const studentImg = await loadImage(student.avatarUrl || '/images/students/omar-ahmed.jpg');
     ctx.save();
     ctx.beginPath();
-    ctx.arc(portraitX, portraitY, portraitRadius, 0, Math.PI * 2);
+    ctx.roundRect(squareX, squareY, squareSize, squareSize, cornerRadius);
     ctx.clip();
-    ctx.drawImage(
-      studentImg,
-      portraitX - portraitRadius,
-      portraitY - portraitRadius,
-      portraitRadius * 2,
-      portraitRadius * 2
-    );
+    ctx.drawImage(studentImg, squareX, squareY, squareSize, squareSize);
     ctx.restore();
   } catch (e) {
     console.warn('Could not load student photo:', e);
   }
 
-  // Multi-tier Polished Gold Ring Frame
+  // Multi-tier Polished Gold Square Frame
   ctx.strokeStyle = '#D4A853';
   ctx.lineWidth = 8;
   ctx.beginPath();
-  ctx.arc(portraitX, portraitY, portraitRadius + 2, 0, Math.PI * 2);
+  ctx.roundRect(squareX - 2, squareY - 2, squareSize + 4, squareSize + 4, cornerRadius + 2);
   ctx.stroke();
 
   ctx.strokeStyle = '#F3E5AB';
   ctx.lineWidth = 2.5;
   ctx.beginPath();
-  ctx.arc(portraitX, portraitY, portraitRadius + 8, 0, Math.PI * 2);
+  ctx.roundRect(squareX - 8, squareY - 8, squareSize + 16, squareSize + 16, cornerRadius + 6);
   ctx.stroke();
 
   // Bottom Royal Navy Ribbon with Gold Star
