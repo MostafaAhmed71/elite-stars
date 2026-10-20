@@ -99,14 +99,9 @@ export default function SchoolView({
       {/* 6. Grand Cinematic Opening Animation (Student by Student with Celebrations) */}
       <SchoolCinematicIntro
         school={school}
-        edition={edition}
         students={effectiveStudents}
         isOpen={isCinematicOpen}
         onClose={() => setIsCinematicOpen(false)}
-        onOpenCertificate={(st) => {
-          setIsCinematicOpen(false);
-          setSelectedStudent(st);
-        }}
       />
 
     </div>
