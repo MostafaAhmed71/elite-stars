@@ -13,8 +13,13 @@ import {
   getStoredStudents,
   saveStoredStudents,
   createNewEdition,
-  resetToDemo,
 } from '@/lib/storage';
+import {
+  fetchSupabaseData,
+  saveStudentToSupabase,
+  deleteStudentFromSupabase,
+} from '@/lib/supabaseService';
+import { isSupabaseConfigured } from '@/lib/supabase';
 import {
   Shield,
   Plus,
@@ -31,7 +36,20 @@ import {
   LogOut,
   ArrowRight,
   ExternalLink,
+  Cloud,
+  CloudCheck,
 } from 'lucide-react';
+
+function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
 
 export default function AdminPage() {
   const [mounted, setMounted] = useState(false);
@@ -47,6 +65,7 @@ export default function AdminPage() {
   const [school, setSchool] = useState<SchoolConfig>(INITIAL_SCHOOL_CONFIG);
   const [editions, setEditions] = useState<WeeklyEdition[]>([INITIAL_EDITION]);
   const [activeEdition, setActiveEdition] = useState<WeeklyEdition>(INITIAL_EDITION);
+  const [isUsingRealData, setIsUsingRealData] = useState(false);
 
   // Edit / Add Form State
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
@@ -58,18 +77,28 @@ export default function AdminPage() {
   const [newAcademicYear, setNewAcademicYear] = useState('1446هـ');
   const [toastMessage, setToastMessage] = useState('');
 
-  // Load data on mount
+  // Load data on mount: First local cache, then fetch real Supabase data if available
   useEffect(() => {
     setMounted(true);
     setSchool(getStoredSchoolConfig());
     setEditions(getStoredEditions());
     setActiveEdition(getActiveEdition());
     setStudents(getStoredStudents());
+
+    fetchSupabaseData().then((res) => {
+      if (res.isRealData && res.students.length > 0) {
+        setSchool(res.school);
+        setEditions(res.editions);
+        setActiveEdition(res.activeEdition);
+        setStudents(res.students);
+        setIsUsingRealData(true);
+      }
+    });
   }, []);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(''), 3500);
+    setTimeout(() => setToastMessage(''), 4500);
   };
 
   const handleLogin = (e: React.FormEvent) => {
@@ -82,7 +111,7 @@ export default function AdminPage() {
     }
   };
 
-  const handleSaveStudentForm = (e: React.FormEvent) => {
+  const handleSaveStudentForm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingStudent) return;
 
@@ -95,25 +124,52 @@ export default function AdminPage() {
     }
 
     setStudents(updated);
-    saveStoredStudents(updated);
+    saveStoredStudents(updated, activeEdition.id);
+
+    // Save directly to Supabase
+    const res = await saveStudentToSupabase(editingStudent, activeEdition.id);
     setEditingStudent(null);
-    showToast('تم حفظ بيانات الطالب بنجاح');
+
+    if (res.success) {
+      showToast('تم حفظ الطالب في قاعدة بيانات سوبابيز بنجاح ☁️');
+    } else if (res.error?.includes('row-level security')) {
+      showToast('تم الحفظ محلياً. لتفعيل الحفظ في سوبابيز، يرجى تشغيل ملف fix_rls_and_seed.sql في لوحة Supabase SQL Editor.');
+    } else {
+      showToast('تم حفظ الطالب بنجاح');
+    }
   };
 
-  const handleDeleteStudent = (id: string) => {
+  const handleSyncAllToSupabase = async () => {
+    showToast('جاري رفع ومزامنة الطلاب مع قاعدة بيانات سوبابيز...');
+    let successCount = 0;
+    let rlsBlocked = false;
+
+    for (const st of students) {
+      const res = await saveStudentToSupabase(st, activeEdition.id);
+      if (res.success) {
+        successCount++;
+      } else if (res.error?.includes('row-level security')) {
+        rlsBlocked = true;
+      }
+    }
+
+    if (rlsBlocked) {
+      showToast('⚠️ قاعدة بيانات سوبابيز ترفض الكتابة بسبب قيود RLS. يرجى تنفيذ ملف fix_rls_and_seed.sql في لوحة Supabase SQL Editor.');
+    } else if (successCount > 0) {
+      showToast(`تم رفع وتخزين ${successCount} طالباً في سوبابيز بنجاح! ☁️`);
+      setIsUsingRealData(true);
+    } else {
+      showToast('تعذر الاتصال بقاعدة البيانات.');
+    }
+  };
+
+  const handleDeleteStudent = async (id: string) => {
     if (confirm('هل أنت متأكد من حذف هذا الطالب من لوحة الشرف؟')) {
       const updated = students.filter((s) => s.id !== id);
       setStudents(updated);
       saveStoredStudents(updated);
+      await deleteStudentFromSupabase(id);
       showToast('تم حذف الطالب بنجاح');
-    }
-  };
-
-  const handleResetDemoStudents = () => {
-    if (confirm('هل تريد استعادة وحفظ جميع بيانات نجوم الأسبوع الافتراضية (12 طالباً)؟')) {
-      resetToDemo();
-      setStudents(getStoredStudents());
-      showToast('تمت استعادة وحفظ جميع بيانات الطلاب الافتراضية بنجاح!');
     }
   };
 
@@ -452,23 +508,32 @@ export default function AdminPage() {
                 ) : (
                   <>
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="text-xs text-[#FF9225]">
-                        الطلاب المسجلون: <span className="font-bold text-[#FFFBF2]">{students.length}</span>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <div className="text-xs text-[#FF9225]">
+                          الطلاب المسجلون: <span className="font-bold text-[#FFFBF2]">{students.length}</span>
+                        </div>
+                        <span className={`text-[10.5px] px-2.5 py-0.5 rounded-full font-bold border ${
+                          isUsingRealData
+                            ? 'bg-emerald-950/80 text-emerald-400 border-emerald-500/40'
+                            : 'bg-teal-950/80 text-teal-300 border-teal-500/40'
+                        }`}>
+                          {isUsingRealData ? '● متصل بقاعدة بيانات سوبابيز (بيانات حقيقية)' : '● تخزين محلي معتمد (بيانات حقيقية فقط)'}
+                        </span>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <button
-                          onClick={handleResetDemoStudents}
-                          title="استعادة وحفظ جميع بيانات النجوم الوهمية"
-                          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#0E334D] hover:bg-[#133D5B] border border-[#FF7A00]/40 text-[#FF9225] hover:text-[#FFFBF2] text-xs font-bold cursor-pointer transition-all"
+                          onClick={handleSyncAllToSupabase}
+                          title="رفع وحفظ جميع الطلاب الحاليين إلى قاعدة بيانات سوبابيز"
+                          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white text-xs font-bold cursor-pointer transition-all shadow-md"
                         >
-                          <RotateCcw className="w-3.5 h-3.5" />
-                          <span>استعادة البيانات الافتراضية (12 طالب)</span>
+                          <Cloud className="w-3.5 h-3.5" />
+                          <span>مزامنة سوبابيز ☁️</span>
                         </button>
                         <button
                           onClick={() => {
                             setIsAddingNew(true);
                             setEditingStudent({
-                              id: `student-${Date.now()}`,
+                              id: generateUUID(),
                               fullName: '',
                               gradeLevel: 'الصف الأول الابتدائي',
                               className: '1/أ',

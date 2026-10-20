@@ -135,7 +135,15 @@ export default function SchoolClassesGrid({
               <div className="p-3.5 bg-white flex items-center justify-between gap-2.5 border-t border-[#0B3D3A]/10">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-[#0F766E] bg-[#E6F4F1] px-2.5 py-1.5 rounded-xl border border-[#0F766E]/20">
                   <Users className="w-3.5 h-3.5 text-[#0F766E]" />
-                  <span>{cls.badgeText}</span>
+                  <span>
+                    {classStudents.length === 0
+                      ? 'لا يوجد نجوم حالياً'
+                      : classStudents.length === 1
+                      ? 'نجم واحد'
+                      : classStudents.length === 2
+                      ? 'نجمان'
+                      : `${classStudents.length} نجوم`}
+                  </span>
                 </div>
 
                 <button

@@ -9,7 +9,9 @@ import {
   getStoredEditions,
   getActiveEdition,
   getStoredStudents,
+  saveStoredStudents,
 } from '@/lib/storage';
+import { fetchSupabaseData } from '@/lib/supabaseService';
 import { INITIAL_EDITION, INITIAL_STUDENTS, INITIAL_SCHOOL_CONFIG } from '@/lib/constants';
 
 export default function HomePage() {
@@ -19,15 +21,29 @@ export default function HomePage() {
   const [school, setSchool] = useState<SchoolConfig>(INITIAL_SCHOOL_CONFIG);
   const [editions, setEditions] = useState<WeeklyEdition[]>([INITIAL_EDITION]);
   const [activeEdition, setActiveEdition] = useState<WeeklyEdition>(INITIAL_EDITION);
-  const [students, setStudents] = useState<Student[]>(INITIAL_STUDENTS);
+  const [students, setStudents] = useState<Student[]>([]);
 
-  // Load persisted school data on mount
+  // Load real data from Supabase (strictly real data only, zero fake data)
   useEffect(() => {
     setMounted(true);
+    // 1. Initial local cache
     setSchool(getStoredSchoolConfig());
     setEditions(getStoredEditions());
     setActiveEdition(getActiveEdition());
     setStudents(getStoredStudents());
+
+    // 2. Fetch from Supabase (only real data)
+    fetchSupabaseData().then((res) => {
+      if (res.isRealData && res.students.length > 0) {
+        setSchool(res.school);
+        setEditions(res.editions);
+        setActiveEdition(res.activeEdition);
+        setStudents(res.students);
+        saveStoredStudents(res.students);
+      } else {
+        setStudents(getStoredStudents());
+      }
+    });
   }, []);
 
   if (!mounted) return null;

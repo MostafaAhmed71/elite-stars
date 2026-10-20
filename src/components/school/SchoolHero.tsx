@@ -141,7 +141,13 @@ export default function SchoolHero({
                   نجوم الأسبوع
                 </span>
                 <span className="text-xs sm:text-sm font-black text-[#F97316]">
-                  {totalStudents || 24} طالباً متميزاً
+                  {totalStudents === 0
+                    ? 'سيتم إعلان النجوم قريباً'
+                    : totalStudents === 1
+                    ? 'طالب واحد متميز'
+                    : totalStudents === 2
+                    ? 'طالبان متميزان'
+                    : `${totalStudents} طالباً متميزاً`}
                 </span>
               </div>
             </div>
@@ -163,7 +169,7 @@ export default function SchoolHero({
                 className="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-[#0B3D3A] hover:bg-[#072523] text-[#D4A853] hover:text-[#FFF7E6] font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(11,61,58,0.25)] border-2 border-[#D4A853] transition-all cursor-pointer group"
               >
                 <Sparkles className="w-4 h-4 text-[#D4A853] group-hover:rotate-12 transition-transform" />
-                <span>العرض السينمائي للنجوم 🎬</span>
+                <span>إعادة مشاهدة حفل التكريم 🎬</span>
               </button>
             )}
           </div>

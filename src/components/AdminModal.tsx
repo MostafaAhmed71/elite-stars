@@ -29,7 +29,6 @@ interface AdminModalProps {
   onSaveStudents: (students: Student[]) => void;
   onSaveSchool: (school: SchoolConfig) => void;
   onCreateEdition: (data: { title: string; weekNumber: number; academicYear: string }) => void;
-  onResetDemo: () => void;
   onClose: () => void;
 }
 
@@ -41,7 +40,6 @@ export default function AdminModal({
   onSaveStudents,
   onSaveSchool,
   onCreateEdition,
-  onResetDemo,
   onClose,
 }: AdminModalProps) {
   // Admin Auth Gate (Simple secure passcode for demonstration, extensible to Supabase Auth)
@@ -656,24 +654,6 @@ export default function AdminModal({
                   </div>
                 </div>
 
-                {/* Demo Reset Button */}
-                <div className="pt-4 border-t border-[#EFC16C]/20 flex justify-between items-center">
-                  <span className="text-xs text-[#FFF8EA]/60">
-                    استعادة الـ 24 طالباً والبيانات الافتراضية المرجعية:
-                  </span>
-                  <button
-                    onClick={() => {
-                      if (confirm('هل ترغب بإعادة ضبط كافة البيانات للوضع الافتراضي المرجعي؟')) {
-                        onResetDemo();
-                        showSuccessToast('تمت استعادة بيانات العرض النموذجية');
-                      }
-                    }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-950/40 border border-rose-500/40 text-xs font-semibold text-rose-300 hover:bg-rose-900/60 transition-all cursor-pointer"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    <span>إعادة ضبط النموذج التجريبي</span>
-                  </button>
-                </div>
               </div>
             )}
 

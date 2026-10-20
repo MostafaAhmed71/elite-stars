@@ -1,5 +1,4 @@
 import { Student, WeeklyEdition, SchoolConfig, CategoryItem } from '@/types';
-import { DEMO_SCHOOL_STUDENTS } from './schoolData';
 
 export const INITIAL_SCHOOL_CONFIG: SchoolConfig = {
   name: 'مدارس نخبة الشمال الأهلية والعالمية',
@@ -49,7 +48,7 @@ export const INITIAL_EDITION: WeeklyEdition = {
   academicYear: '1448هـ',
   isPublished: true,
   publishedAt: new Date().toISOString().split('T')[0],
-  totalStudents: DEMO_SCHOOL_STUDENTS.length,
+  totalStudents: 0,
   celestialQuote: 'كل طالب يضيء بطريقته.. ومعاً نصنع كوكبة من التميز',
   clusters: [
     { id: 1, name: 'كوكبة الإشراق', description: 'المجموعة الأولى من نجوم التميز' },
@@ -59,5 +58,5 @@ export const INITIAL_EDITION: WeeklyEdition = {
   ],
 };
 
-// All mock demo student records persisted as initial data
-export const INITIAL_STUDENTS: Student[] = DEMO_SCHOOL_STUDENTS;
+// Default students list is empty until added or loaded from database
+export const INITIAL_STUDENTS: Student[] = [];

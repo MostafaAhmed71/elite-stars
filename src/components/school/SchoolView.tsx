@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SchoolConfig, WeeklyEdition, Student } from '@/types';
-import { SchoolClassInfo, SCHOOL_CLASSES, DEMO_SCHOOL_STUDENTS } from '@/lib/schoolData';
+import { SchoolClassInfo, SCHOOL_CLASSES } from '@/lib/schoolData';
 import SchoolHero from './SchoolHero';
 import SchoolClassesGrid from './SchoolClassesGrid';
 import SchoolClassroomShowcase from './SchoolClassroomShowcase';
 import SchoolCertificateModal from './SchoolCertificateModal';
 import SchoolBottomBar from './SchoolBottomBar';
-import SchoolCinematicIntro from './SchoolCinematicIntro';
+import SchoolCinematicShow from './SchoolCinematicShow';
+import SchoolClassroomAwardsPrototype from './SchoolClassroomAwardsPrototype';
 
 interface SchoolViewProps {
   school: SchoolConfig;
@@ -21,19 +22,30 @@ export default function SchoolView({
   edition,
   students,
 }: SchoolViewProps) {
-  // Use loaded persisted students or fallback to DEMO_SCHOOL_STUDENTS
+  // Only real students; empty array if no students are published yet
   const effectiveStudents = React.useMemo(() => {
-    if (students && students.length > 0) {
-      return students;
-    }
-    return DEMO_SCHOOL_STUDENTS;
+    return students || [];
   }, [students]);
 
   // View state: 'grid' (all classes) vs 'showcase' (single class stage)
   const [viewMode, setViewMode] = useState<'grid' | 'showcase'>('grid');
   const [selectedClass, setSelectedClass] = useState<SchoolClassInfo>(SCHOOL_CLASSES[0]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [isCinematicOpen, setIsCinematicOpen] = useState(true);
+
+  // Awards stage prototype state (matching reference image)
+  const [isPrototypeOpen, setIsPrototypeOpen] = useState(true);
+  const [isCinematicOpen, setIsCinematicOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const sceneParam = params.get('scene');
+    if (sceneParam === 'none') {
+      setIsPrototypeOpen(false);
+      setIsCinematicOpen(false);
+      return;
+    }
+  }, []);
 
   const classesSectionRef = useRef<HTMLDivElement | null>(null);
 
@@ -58,7 +70,7 @@ export default function SchoolView({
         edition={edition}
         totalStudents={effectiveStudents.length}
         onExploreClick={handleExploreClick}
-        onPlayCinematic={() => setIsCinematicOpen(true)}
+        onPlayCinematic={() => setIsPrototypeOpen(true)}
       />
 
       {/* 2. Classes Section Anchor */}
@@ -96,9 +108,20 @@ export default function SchoolView({
         onClose={() => setSelectedStudent(null)}
       />
 
-      {/* 6. Grand Cinematic Opening Animation (Student by Student with Celebrations) */}
-      <SchoolCinematicIntro
+      {/* 6. Grand Awards Stage Prototype (Matching media_1792482192746.jpg) */}
+      {isPrototypeOpen && (
+        <SchoolClassroomAwardsPrototype
+          school={school}
+          edition={edition}
+          students={effectiveStudents}
+          onClose={() => setIsPrototypeOpen(false)}
+        />
+      )}
+
+      {/* 7. Grand Cinematic Classroom Awards Ceremony Show */}
+      <SchoolCinematicShow
         school={school}
+        edition={edition}
         students={effectiveStudents}
         isOpen={isCinematicOpen}
         onClose={() => setIsCinematicOpen(false)}

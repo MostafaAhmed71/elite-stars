@@ -7,19 +7,19 @@ const STORAGE_KEYS = {
   EDITIONS: 'elite_stars_editions',
   ACTIVE_EDITION_ID: 'elite_stars_active_edition_id',
   STUDENTS: 'elite_stars_students',
-  VERSION: 'elite_stars_data_version_v6_saved',
+  VERSION: 'elite_stars_data_version_v8_real',
 };
 
-// Seed or update localStorage with mock students and default configuration
+// Clear any old mock demo data from localStorage
 if (typeof window !== 'undefined') {
   try {
     const currentVersion = localStorage.getItem(STORAGE_KEYS.VERSION);
-    if (currentVersion !== 'v6') {
-      localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(INITIAL_STUDENTS));
-      localStorage.setItem(STORAGE_KEYS.EDITIONS, JSON.stringify([INITIAL_EDITION]));
+    if (currentVersion !== 'v8_real') {
+      localStorage.removeItem(STORAGE_KEYS.STUDENTS);
       localStorage.setItem(STORAGE_KEYS.SCHOOL, JSON.stringify(INITIAL_SCHOOL_CONFIG));
-      localStorage.setItem(STORAGE_KEYS.ACTIVE_EDITION_ID, INITIAL_EDITION.id);
-      localStorage.setItem(STORAGE_KEYS.VERSION, 'v6');
+      localStorage.setItem(STORAGE_KEYS.EDITIONS, JSON.stringify([INITIAL_EDITION]));
+      localStorage.setItem(STORAGE_KEYS.ACTIVE_EDITION_ID, JSON.stringify(INITIAL_EDITION.id));
+      localStorage.setItem(STORAGE_KEYS.VERSION, 'v8_real');
     }
   } catch (e) {
     // ignore
@@ -31,9 +31,14 @@ function getLocalItem<T>(key: string, fallback: T): T {
   if (typeof window === 'undefined') return fallback;
   try {
     const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : fallback;
-  } catch (e) {
-    console.warn(`Error reading ${key} from localStorage:`, e);
+    if (item === null || item === undefined) return fallback;
+    try {
+      return JSON.parse(item);
+    } catch {
+      // In case the item in localStorage was stored as a raw unquoted string (e.g. week-01-1446)
+      return item as unknown as T;
+    }
+  } catch {
     return fallback;
   }
 }
@@ -47,6 +52,12 @@ function setLocalItem<T>(key: string, value: T): void {
   }
 }
 
+import {
+  saveStudentToSupabase,
+  saveSchoolConfigToSupabase,
+  saveWeeklyEditionToSupabase,
+} from './supabaseService';
+
 // School Configuration
 export function getStoredSchoolConfig(): SchoolConfig {
   const config = getLocalItem<SchoolConfig>(STORAGE_KEYS.SCHOOL, INITIAL_SCHOOL_CONFIG);
@@ -58,6 +69,10 @@ export function getStoredSchoolConfig(): SchoolConfig {
 
 export function saveStoredSchoolConfig(config: SchoolConfig): void {
   setLocalItem(STORAGE_KEYS.SCHOOL, config);
+  // Asynchronously sync to Supabase
+  saveSchoolConfigToSupabase(config).catch((err) => {
+    console.warn('Could not sync school config to Supabase:', err);
+  });
 }
 
 // Editions
@@ -79,19 +94,23 @@ export function getActiveEdition(): WeeklyEdition {
   return editions.find((e) => e.id === activeId) || editions[0] || INITIAL_EDITION;
 }
 
-// Students
+// Students (Only real data, defaults to empty)
 export function getStoredStudents(editionId?: string): Student[] {
-  const allStudents = getLocalItem<Student[]>(STORAGE_KEYS.STUDENTS, INITIAL_STUDENTS);
-  if (!allStudents || allStudents.length === 0) {
-    setLocalItem(STORAGE_KEYS.STUDENTS, INITIAL_STUDENTS);
-    return INITIAL_STUDENTS;
-  }
+  const allStudents = getLocalItem<Student[]>(STORAGE_KEYS.STUDENTS, []);
+  if (!allStudents) return [];
   if (!editionId) return allStudents;
   return allStudents;
 }
 
-export function saveStoredStudents(students: Student[]): void {
+export function saveStoredStudents(students: Student[], editionId?: string): void {
   setLocalItem(STORAGE_KEYS.STUDENTS, students);
+  
+  // Asynchronously sync each student to Supabase
+  students.forEach((student) => {
+    saveStudentToSupabase(student, editionId).catch((err) => {
+      console.warn('Could not sync student to Supabase:', err);
+    });
+  });
 }
 
 // Create New Weekly Edition
@@ -116,14 +135,11 @@ export function createNewEdition(data: {
   const updated = [newEdition, ...editions];
   setLocalItem(STORAGE_KEYS.EDITIONS, updated);
   setActiveEditionId(newEdition.id);
-  return newEdition;
-}
 
-// Reset Data
-export function resetToDemo(): void {
-  if (typeof window === 'undefined') return;
-  setLocalItem(STORAGE_KEYS.SCHOOL, INITIAL_SCHOOL_CONFIG);
-  setLocalItem(STORAGE_KEYS.EDITIONS, [INITIAL_EDITION]);
-  setLocalItem(STORAGE_KEYS.ACTIVE_EDITION_ID, INITIAL_EDITION.id);
-  setLocalItem(STORAGE_KEYS.STUDENTS, INITIAL_STUDENTS);
+  // Asynchronously sync to Supabase
+  saveWeeklyEditionToSupabase(newEdition).catch((err) => {
+    console.warn('Could not sync edition to Supabase:', err);
+  });
+
+  return newEdition;
 }
