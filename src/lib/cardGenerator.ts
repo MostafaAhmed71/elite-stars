@@ -1,7 +1,7 @@
 import { Student, SchoolConfig } from '@/types';
 
 /**
- * Generates and downloads a luxury high-resolution recognition card as a PNG image
+ * Generates and downloads the exact Royal Ivory & Navy Recognition Certificate as a high-resolution PNG image
  */
 export async function generateStudentCardPNG(
   student: Student,
@@ -16,278 +16,360 @@ export async function generateStudentCardPNG(
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  // 1. Cinematic Cosmic Background Gradient
-  const bgGrad = ctx.createLinearGradient(0, 0, width, height);
-  bgGrad.addColorStop(0, '#081B38');
-  bgGrad.addColorStop(0.3, '#061427');
-  bgGrad.addColorStop(0.7, '#071830');
-  bgGrad.addColorStop(1, '#040C1A');
+  // 1. Warm Ivory Radial Background
+  const bgGrad = ctx.createRadialGradient(width / 2, height / 2, 100, width / 2, height / 2, width * 0.75);
+  bgGrad.addColorStop(0, '#FFFFFF');
+  bgGrad.addColorStop(0.7, '#FAF6EC');
+  bgGrad.addColorStop(1, '#F3EBD8');
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, width, height);
 
-  // 2. Cosmic Nebula Radial Glow
-  const radialGlow = ctx.createRadialGradient(width / 2, 450, 80, width / 2, 450, 560);
-  radialGlow.addColorStop(0, 'rgba(255, 216, 132, 0.32)');
-  radialGlow.addColorStop(0.5, 'rgba(16, 45, 84, 0.45)');
-  radialGlow.addColorStop(1, 'rgba(4, 12, 26, 0)');
-  ctx.fillStyle = radialGlow;
-  ctx.fillRect(0, 0, width, height);
-
-  // 3. Starlight Particles
-  for (let i = 0; i < 110; i++) {
-    const sx = Math.sin(i * 123.45) * 0.5 + 0.5;
-    const sy = Math.cos(i * 67.89) * 0.5 + 0.5;
-    const px = sx * width;
-    const py = sy * height;
-    const radius = (i % 3 === 0) ? 2.5 : 1.2;
-    ctx.fillStyle = (i % 4 === 0) ? '#FFE8A3' : '#E8F4FF';
-    ctx.globalAlpha = 0.35 + (i % 5) * 0.15;
-    ctx.beginPath();
-    ctx.arc(px, py, radius, 0, Math.PI * 2);
-    ctx.fill();
+  // 2. Faint Islamic Pattern Watermark
+  ctx.strokeStyle = 'rgba(12, 35, 64, 0.025)';
+  ctx.lineWidth = 1;
+  const step = 80;
+  for (let x = 0; x < width; x += step) {
+    for (let y = 0; y < height; y += step) {
+      ctx.strokeRect(x, y, step, step);
+      ctx.beginPath();
+      ctx.moveTo(x + step / 2, y);
+      ctx.lineTo(x + step, y + step / 2);
+      ctx.lineTo(x + step / 2, y + step);
+      ctx.lineTo(x, y + step / 2);
+      ctx.closePath();
+      ctx.stroke();
+    }
   }
-  ctx.globalAlpha = 1.0;
 
-  // 4. Double Luxury Gold Border with Ornate Corner Filigree
-  const padding = 50;
-  ctx.strokeStyle = '#EFC16C';
-  ctx.lineWidth = 3.5;
-  ctx.strokeRect(padding, padding, width - padding * 2, height - padding * 2);
+  // 3. Double Gold Certificate Border
+  const pad = 36;
+  ctx.strokeStyle = '#D4A853';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(pad, pad, width - pad * 2, height - pad * 2);
 
-  ctx.strokeStyle = '#FFD884';
+  ctx.strokeStyle = 'rgba(212, 168, 83, 0.45)';
   ctx.lineWidth = 1.5;
-  ctx.strokeRect(padding + 12, padding + 12, width - (padding + 12) * 2, height - (padding + 12) * 2);
+  ctx.strokeRect(pad + 10, pad + 10, width - (pad + 10) * 2, height - (pad + 10) * 2);
 
-  // Corner decorative flourishes
-  const cornerSize = 45;
-  const corners = [
-    [padding + 4, padding + 4, 1, 1],
-    [width - padding - 4, padding + 4, -1, 1],
-    [padding + 4, height - padding - 4, 1, -1],
-    [width - padding - 4, height - padding - 4, -1, -1],
+  // Corner Diamond Accents
+  const diamondCorners = [
+    [pad + 18, pad + 18],
+    [width - pad - 18, pad + 18],
+    [pad + 18, height - pad - 18],
+    [width - pad - 18, height - pad - 18],
   ];
-
-  ctx.strokeStyle = '#FFE8A3';
-  ctx.lineWidth = 4.5;
-  corners.forEach(([x, y, dx, dy]) => {
-    ctx.beginPath();
-    ctx.moveTo(x, y + dy * cornerSize);
-    ctx.lineTo(x, y);
-    ctx.lineTo(x + dx * cornerSize, y);
-    ctx.stroke();
-
-    // Corner diamond node
-    ctx.fillStyle = '#FFD884';
-    ctx.beginPath();
-    ctx.arc(x + dx * 10, y + dy * 10, 3, 0, Math.PI * 2);
-    ctx.fill();
+  ctx.fillStyle = '#D4A853';
+  diamondCorners.forEach(([cx, cy]) => {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(Math.PI / 4);
+    ctx.fillRect(-4, -4, 8, 8);
+    ctx.restore();
   });
 
-  // 5. Header: School Official Logo & Title
+  // 4. Top-Left Navy & Gold Curved Corner Flourish
+  ctx.save();
+  ctx.fillStyle = '#0C2340';
+  ctx.beginPath();
+  ctx.moveTo(pad, pad);
+  ctx.lineTo(pad, pad + 190);
+  ctx.bezierCurveTo(pad + 80, pad + 170, pad + 160, pad + 110, pad + 195, pad);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = '#D4A853';
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(pad, pad + 205);
+  ctx.bezierCurveTo(pad + 90, pad + 185, pad + 175, pad + 120, pad + 215, pad);
+  ctx.stroke();
+
+  ctx.strokeStyle = '#E5C37A';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(pad, pad + 218);
+  ctx.bezierCurveTo(pad + 100, pad + 195, pad + 185, pad + 130, pad + 228, pad);
+  ctx.stroke();
+  ctx.restore();
+
+  // 5. Bottom-Right Navy & Gold Curved Corner Flourish (Mirrored)
+  ctx.save();
+  ctx.translate(width, height);
+  ctx.rotate(Math.PI);
+  ctx.fillStyle = '#0C2340';
+  ctx.beginPath();
+  ctx.moveTo(pad, pad);
+  ctx.lineTo(pad, pad + 190);
+  ctx.bezierCurveTo(pad + 80, pad + 170, pad + 160, pad + 110, pad + 195, pad);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = '#D4A853';
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(pad, pad + 205);
+  ctx.bezierCurveTo(pad + 90, pad + 185, pad + 175, pad + 120, pad + 215, pad);
+  ctx.stroke();
+  ctx.restore();
+
+  // 6. Top-Right Navy Bookmark Ribbon with Gold Star
+  ctx.save();
+  const rbX = width - pad - 120;
+  const rbY = pad;
+  const rbW = 60;
+  const rbH = 120;
+  ctx.fillStyle = '#0C2340';
+  ctx.beginPath();
+  ctx.moveTo(rbX, rbY);
+  ctx.lineTo(rbX + rbW, rbY);
+  ctx.lineTo(rbX + rbW, rbY + rbH);
+  ctx.lineTo(rbX + rbW / 2, rbY + rbH - 25);
+  ctx.lineTo(rbX, rbY + rbH);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#D4A853';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  draw3DStar(ctx, rbX + rbW / 2, rbY + 50, 16);
+  ctx.restore();
+
+  // 7. Official School Logo & Bilingual Names
+  const logoCenterY = 120;
   try {
     const logoImg = await loadImage('/images/school-logo.jpg');
-    ctx.save();
-    ctx.fillStyle = '#FFFFFF';
-    ctx.beginPath();
-    ctx.arc(width / 2, 105, 42, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#FFD884';
-    ctx.lineWidth = 3.5;
-    ctx.stroke();
-    ctx.clip();
-    ctx.drawImage(logoImg, width / 2 - 42, 105 - 42, 84, 84);
-    ctx.restore();
+    const logoW = 110;
+    const logoH = 110;
+    ctx.drawImage(logoImg, width / 2 - logoW / 2, logoCenterY - logoH / 2, logoW, logoH);
   } catch (e) {
-    console.warn('Could not load school logo for canvas', e);
+    console.warn('Could not load logo for canvas:', e);
   }
 
   ctx.textAlign = 'center';
   ctx.direction = 'rtl';
-  ctx.fillStyle = '#FFF8EA';
-  ctx.font = 'bold 36px "Cairo", "IBM Plex Sans Arabic", sans-serif';
-  ctx.fillText(school.name || 'مدارس نخبة الشمال الأهلية والعالمية', width / 2, 185);
+  ctx.fillStyle = '#0C2340';
+  ctx.font = '900 32px "Tajawal", "Cairo", sans-serif';
+  ctx.fillText(school.name || 'مدارس نخبة الشمال الأهلية والعالمية بمحافظة رفحاء', width / 2, logoCenterY + 85);
 
-  ctx.fillStyle = '#EFC16C';
-  ctx.font = '20px "Cairo", "IBM Plex Sans Arabic", sans-serif';
-  ctx.fillText(`لوحة الشرف الرسمية • ${school.slogan || 'تميز بالتعليم .. جودة في الأداء .. تنمية للمواهب'}`, width / 2, 222);
+  ctx.fillStyle = '#1E5162';
+  ctx.font = 'bold 20px "Tajawal", "Cairo", sans-serif';
+  ctx.fillText('Northern Elite Private and International Schools in Rafha', width / 2, logoCenterY + 118);
 
-  // 6. Radiant Sunburst Rays & Portrait Bezel
-  const portraitCenterX = width / 2;
-  const portraitCenterY = 475;
-  const portraitRadius = 165;
+  // 8. Title Section: Star, Laurel Sprigs, and «نجم الأسبوع»
+  const titleY = 320;
+  draw3DStar(ctx, width / 2, titleY - 45, 18);
 
-  // Radiating rays
-  for (let a = 0; a < 32; a++) {
-    const angle = (a * 2 * Math.PI) / 32;
-    const r1 = portraitRadius + 20;
-    const r2 = portraitRadius + 55;
-    ctx.strokeStyle = (a % 2 === 0) ? 'rgba(255, 232, 163, 0.55)' : 'rgba(239, 193, 108, 0.28)';
-    ctx.lineWidth = 2.5;
+  // Title Text
+  ctx.fillStyle = '#0C2340';
+  ctx.font = '900 68px "Tajawal", "Cairo", sans-serif';
+  ctx.fillText('نجم الأسبوع', width / 2, titleY + 20);
+
+  // 3 small stars under title
+  draw3DStar(ctx, width / 2 - 28, titleY + 45, 7);
+  draw3DStar(ctx, width / 2, titleY + 45, 10);
+  draw3DStar(ctx, width / 2 + 28, titleY + 45, 7);
+
+  // 9. Student Portrait with Golden Laurel Wreath
+  const portraitX = width / 2;
+  const portraitY = 575;
+  const portraitRadius = 145;
+
+  // Draw Laurel Wreath leaves around portrait
+  ctx.fillStyle = '#D4A853';
+  for (let i = -7; i <= 7; i++) {
+    if (Math.abs(i) < 2) continue;
+    const angleLeft = Math.PI - (i * 0.16);
+    const lx = portraitX + Math.cos(angleLeft) * (portraitRadius + 30);
+    const ly = portraitY + Math.sin(angleLeft) * (portraitRadius + 30);
+    ctx.save();
+    ctx.translate(lx, ly);
+    ctx.rotate(angleLeft + Math.PI / 4);
     ctx.beginPath();
-    ctx.moveTo(portraitCenterX + Math.cos(angle) * r1, portraitCenterY + Math.sin(angle) * r1);
-    ctx.lineTo(portraitCenterX + Math.cos(angle) * r2, portraitCenterY + Math.sin(angle) * r2);
-    ctx.stroke();
+    ctx.ellipse(0, 0, 16, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    const angleRight = (i * 0.16);
+    const rx = portraitX + Math.cos(angleRight) * (portraitRadius + 30);
+    const ry = portraitY + Math.sin(angleRight) * (portraitRadius + 30);
+    ctx.save();
+    ctx.translate(rx, ry);
+    ctx.rotate(angleRight - Math.PI / 4);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 16, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
   }
 
-  // Draw 5-pointed 3D faceted gold crown star at top
-  draw3DStar(ctx, portraitCenterX, portraitCenterY - portraitRadius - 26, 32);
-
-  // Load and draw student portrait inside circle
+  // Circular Portrait
   try {
-    const img = await loadImage(student.avatarUrl);
+    const studentImg = await loadImage(student.avatarUrl || '/images/students/omar-ahmed.jpg');
     ctx.save();
     ctx.beginPath();
-    ctx.arc(portraitCenterX, portraitCenterY, portraitRadius, 0, Math.PI * 2);
+    ctx.arc(portraitX, portraitY, portraitRadius, 0, Math.PI * 2);
     ctx.clip();
     ctx.drawImage(
-      img,
-      portraitCenterX - portraitRadius,
-      portraitCenterY - portraitRadius,
+      studentImg,
+      portraitX - portraitRadius,
+      portraitY - portraitRadius,
       portraitRadius * 2,
       portraitRadius * 2
     );
     ctx.restore();
   } catch (e) {
-    console.warn('Could not load student portrait for canvas, using fallback', e);
+    console.warn('Could not load student photo:', e);
   }
 
-  // Multi-tier golden frame ring over portrait
-  ctx.strokeStyle = '#FFE8A3';
-  ctx.lineWidth = 9;
+  // Multi-tier Polished Gold Ring Frame
+  ctx.strokeStyle = '#D4A853';
+  ctx.lineWidth = 8;
   ctx.beginPath();
-  ctx.arc(portraitCenterX, portraitCenterY, portraitRadius + 5, 0, Math.PI * 2);
+  ctx.arc(portraitX, portraitY, portraitRadius + 2, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.strokeStyle = '#C99632';
+  ctx.strokeStyle = '#F3E5AB';
   ctx.lineWidth = 2.5;
   ctx.beginPath();
-  ctx.arc(portraitCenterX, portraitCenterY, portraitRadius + 15, 0, Math.PI * 2);
+  ctx.arc(portraitX, portraitY, portraitRadius + 8, 0, Math.PI * 2);
   ctx.stroke();
 
-  // 7. Sculpted Golden Ribbon «نجم الأسبوع» with 3D folded tails
-  const ribbonY = portraitCenterY + portraitRadius - 18;
-  const ribbonWidth = 440;
-  const ribbonHeight = 76;
-
-  // Ribbon Left Tail
-  ctx.fillStyle = '#4A3408';
+  // Bottom Royal Navy Ribbon with Gold Star
+  const rbTailW = 340;
+  const rbTailH = 48;
+  const rbTailY = portraitY + portraitRadius - 16;
+  ctx.fillStyle = '#0C2340';
   ctx.beginPath();
-  ctx.moveTo(portraitCenterX - ribbonWidth / 2 - 35, ribbonY + 16);
-  ctx.lineTo(portraitCenterX - ribbonWidth / 2, ribbonY + 16);
-  ctx.lineTo(portraitCenterX - ribbonWidth / 2, ribbonY + ribbonHeight + 12);
-  ctx.lineTo(portraitCenterX - ribbonWidth / 2 - 35, ribbonY + ribbonHeight + 12);
-  ctx.lineTo(portraitCenterX - ribbonWidth / 2 - 14, ribbonY + (ribbonHeight + 28) / 2);
-  ctx.closePath();
+  ctx.roundRect(portraitX - rbTailW / 2, rbTailY, rbTailW, rbTailH, 12);
+  ctx.fill();
+  ctx.strokeStyle = '#D4A853';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  draw3DStar(ctx, portraitX, rbTailY + rbTailH / 2, 22);
+
+  // 10. Student Name & Grade Cartouche Plaque
+  const plaqueY = 820;
+  const plaqueW = 540;
+  const plaqueH = 135;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath();
+  ctx.roundRect(portraitX - plaqueW / 2, plaqueY, plaqueW, plaqueH, 20);
   ctx.fill();
 
-  // Ribbon Right Tail
-  ctx.beginPath();
-  ctx.moveTo(portraitCenterX + ribbonWidth / 2 + 35, ribbonY + 16);
-  ctx.lineTo(portraitCenterX + ribbonWidth / 2, ribbonY + 16);
-  ctx.lineTo(portraitCenterX + ribbonWidth / 2, ribbonY + ribbonHeight + 12);
-  ctx.lineTo(portraitCenterX + ribbonWidth / 2 + 35, ribbonY + ribbonHeight + 12);
-  ctx.lineTo(portraitCenterX + ribbonWidth / 2 + 14, ribbonY + (ribbonHeight + 28) / 2);
-  ctx.closePath();
-  ctx.fill();
-
-  // Ribbon Center Banner Fill
-  const ribbonGrad = ctx.createLinearGradient(portraitCenterX - ribbonWidth / 2, 0, portraitCenterX + ribbonWidth / 2, 0);
-  ribbonGrad.addColorStop(0, '#A67C1E');
-  ribbonGrad.addColorStop(0.15, '#D4AF37');
-  ribbonGrad.addColorStop(0.35, '#FFE8A3');
-  ribbonGrad.addColorStop(0.5, '#FFF9E6');
-  ribbonGrad.addColorStop(0.65, '#FFE8A3');
-  ribbonGrad.addColorStop(0.85, '#D4AF37');
-  ribbonGrad.addColorStop(1, '#A67C1E');
-
-  ctx.fillStyle = ribbonGrad;
-  ctx.beginPath();
-  ctx.roundRect(portraitCenterX - ribbonWidth / 2, ribbonY, ribbonWidth, ribbonHeight, 8);
-  ctx.fill();
-
-  ctx.strokeStyle = '#FFFFFF';
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#D4A853';
+  ctx.lineWidth = 3;
   ctx.stroke();
 
-  // Ribbon Text «نجم الأسبوع»
-  ctx.fillStyle = '#061325';
-  ctx.font = '900 42px "Cairo", "IBM Plex Sans Arabic", sans-serif';
-  ctx.fillText('نجم الأسبوع', portraitCenterX, ribbonY + 53);
-
-  // 8. Student Full Name
-  ctx.fillStyle = '#FFE8A3';
-  ctx.font = '900 58px "Cairo", "IBM Plex Sans Arabic", sans-serif';
-  ctx.fillText(student.fullName, width / 2, 755);
-
-  // Grade & Class Subtitle
-  ctx.fillStyle = '#FFF8EA';
-  ctx.font = 'bold 30px "Cairo", "IBM Plex Sans Arabic", sans-serif';
-  ctx.fillText(`${student.gradeLevel} • الفصل ${student.className}`, width / 2, 810);
-
-  // 9. Congratulatory Message Citation Box
-  const boxX = 120;
-  const boxY = 870;
-  const boxWidth = width - 240;
-  const boxHeight = 230;
-
-  ctx.fillStyle = 'rgba(15, 45, 84, 0.65)';
-  ctx.beginPath();
-  ctx.roundRect(boxX, boxY, boxWidth, boxHeight, 24);
-  ctx.fill();
-
-  ctx.strokeStyle = 'rgba(255, 216, 132, 0.45)';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // Gold quotation mark
-  ctx.fillStyle = '#FFD884';
-  ctx.font = '60px serif';
-  ctx.fillText('“', width / 2, boxY + 45);
-
-  // Recognition Reason wrapped
-  ctx.fillStyle = '#FFF8EA';
-  ctx.font = 'bold 26px "Cairo", "IBM Plex Sans Arabic", sans-serif';
-  wrapText(ctx, student.recognitionReason, width / 2, boxY + 100, boxWidth - 60, 44);
-
-  // 10. Achievement Trait Medallions
-  const badgeY = 1175;
-  const badgeCount = student.badges.length;
-  const colWidth = 260;
-  const totalBadgesWidth = badgeCount * colWidth;
-  let startX = (width - totalBadgesWidth) / 2;
-
-  student.badges.forEach((badge) => {
-    // Medallion outer ring
-    ctx.strokeStyle = '#FFD884';
-    ctx.lineWidth = 2.5;
+  // Plaque Corner Accent Brackets
+  ctx.strokeStyle = '#0C2340';
+  ctx.lineWidth = 3;
+  const bSize = 14;
+  [
+    [portraitX - plaqueW / 2 + 6, plaqueY + 6, 1, 1],
+    [portraitX + plaqueW / 2 - 6, plaqueY + 6, -1, 1],
+    [portraitX - plaqueW / 2 + 6, plaqueY + plaqueH - 6, 1, -1],
+    [portraitX + plaqueW / 2 - 6, plaqueY + plaqueH - 6, -1, -1],
+  ].forEach(([bx, by, dx, dy]) => {
     ctx.beginPath();
-    ctx.arc(startX + colWidth / 2, badgeY, 26, 0, Math.PI * 2);
+    ctx.moveTo(bx, by + dy * bSize);
+    ctx.lineTo(bx, by);
+    ctx.lineTo(bx + dx * bSize, by);
     ctx.stroke();
-
-    ctx.fillStyle = '#081B38';
-    ctx.beginPath();
-    ctx.arc(startX + colWidth / 2, badgeY, 24, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Star icon inside medallion
-    draw3DStar(ctx, startX + colWidth / 2, badgeY, 15);
-
-    // Label
-    ctx.fillStyle = '#FFF8EA';
-    ctx.font = 'bold 24px "Cairo", "IBM Plex Sans Arabic", sans-serif';
-    ctx.fillText(badge, startX + colWidth / 2, badgeY + 62);
-
-    startX += colWidth;
   });
 
-  // 11. Footer Watermark & Date
-  ctx.fillStyle = 'rgba(239, 193, 108, 0.85)';
-  ctx.font = '22px "Cairo", "IBM Plex Sans Arabic", sans-serif';
-  ctx.fillText('ELITE STARS | نجوم الأسبوع — وسام الشرف والتميز المدرسي', width / 2, 1390);
+  // Full Name
+  ctx.fillStyle = '#0C2340';
+  ctx.font = '900 48px "Tajawal", "Cairo", sans-serif';
+  ctx.fillText(student.fullName, width / 2, plaqueY + 62);
 
-  ctx.fillStyle = 'rgba(255, 248, 234, 0.6)';
-  ctx.font = '18px "Cairo", "IBM Plex Sans Arabic", sans-serif';
-  ctx.fillText(`العام الدراسي 1446هـ • تم الإصدار بتاريخ: ${new Date().toLocaleDateString('ar-SA')}`, width / 2, 1425);
+  // Divider Line with Diamond
+  ctx.strokeStyle = '#D4A853';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(width / 2 - 90, plaqueY + 80);
+  ctx.lineTo(width / 2 + 90, plaqueY + 80);
+  ctx.stroke();
+
+  // Grade & Class
+  ctx.fillStyle = '#0C2340';
+  ctx.font = 'bold 26px "Tajawal", "Cairo", sans-serif';
+  ctx.fillText(`${student.gradeLevel} / ${student.className.split('/')[1] || student.className}`, width / 2, plaqueY + 115);
+
+  // 11. Pointed Achievement Ribbon (شريط التكريم)
+  const achY = 990;
+  const achW = 420;
+  const achH = 54;
+  ctx.fillStyle = '#0C2340';
+  ctx.beginPath();
+  ctx.roundRect(width / 2 - achW / 2, achY, achW, achH, 14);
+  ctx.fill();
+  ctx.strokeStyle = '#D4A853';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  ctx.fillStyle = '#FFF7E6';
+  ctx.font = '900 28px "Tajawal", "Cairo", sans-serif';
+  ctx.fillText(`🎓 ${student.category || student.badges?.[0] || 'التميز الأكاديمي'} 🎓`, width / 2, achY + 38);
+
+  // 12. Congratulatory Message Box
+  const msgY = 1075;
+  const msgW = 760;
+  const msgH = 135;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath();
+  ctx.roundRect(width / 2 - msgW / 2, msgY, msgW, msgH, 20);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(212, 168, 83, 0.7)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.fillStyle = '#0C2340';
+  ctx.font = '900 30px "Tajawal", "Cairo", sans-serif';
+  ctx.fillText('مبروك يا بطل..', width / 2, msgY + 45);
+
+  ctx.fillStyle = '#173331';
+  ctx.font = 'bold 24px "Tajawal", "Cairo", sans-serif';
+  wrapText(ctx, student.recognitionReason || 'التفوق في مادة الرياضيات والحلول الذكية في المسابقات.', width / 2, msgY + 88, msgW - 60, 36);
+
+  // 13. The 4 Honor Badges (قدوة حسنة، مبادرة، سلوك مميز، الانضباط)
+  const bRowY = 1245;
+  const bLabels = ['قدوة حسنة', 'مبادرة', 'سلوك مميز', 'الانضباط'];
+  const bW = 175;
+  const bH = 135;
+  const bGap = 20;
+  const totalBW = 4 * bW + 3 * bGap;
+  const bStartX = (width - totalBW) / 2;
+
+  bLabels.forEach((label, idx) => {
+    const curX = bStartX + idx * (bW + bGap);
+    // Card
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.roundRect(curX, bRowY, bW, bH, 20);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(212, 168, 83, 0.7)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Circle Icon Badge
+    ctx.fillStyle = '#0C2340';
+    ctx.beginPath();
+    ctx.arc(curX + bW / 2, bRowY + 45, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#D4A853';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    draw3DStar(ctx, curX + bW / 2, bRowY + 45, 14);
+
+    // Label
+    ctx.fillStyle = '#0C2340';
+    ctx.font = '900 22px "Tajawal", "Cairo", sans-serif';
+    ctx.fillText(label, curX + bW / 2, bRowY + 110);
+  });
+
+  // 14. Footer Copyright & Academic Year
+  ctx.fillStyle = '#1E5162';
+  ctx.font = 'bold 20px "Tajawal", "Cairo", sans-serif';
+  ctx.fillText('جميع حقوق التكريم والتقدير محفوظة لأبنائنا وبناتنا النجوم © 1448هـ', width / 2, 1450);
 
   // Trigger download
   canvas.toBlob((blob) => {
@@ -295,7 +377,7 @@ export async function generateStudentCardPNG(
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `وسام_نجم_الأسبوع_${student.fullName.replace(/\s+/g, '_')}.png`;
+    link.download = `بطاقة_نجم_الأسبوع_${student.fullName.replace(/\s+/g, '_')}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -324,7 +406,7 @@ function draw3DStar(
 
   // Draw light and dark facets
   for (let i = 0; i < 10; i += 2) {
-    ctx.fillStyle = '#FFF9E6';
+    ctx.fillStyle = '#F3E5AB';
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.lineTo(points[i].x, points[i].y);
@@ -332,7 +414,7 @@ function draw3DStar(
     ctx.closePath();
     ctx.fill();
 
-    ctx.fillStyle = '#C99632';
+    ctx.fillStyle = '#C59B27';
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.lineTo(points[(i + 1) % 10].x, points[(i + 1) % 10].y);

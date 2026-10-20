@@ -23,11 +23,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@400;600;700;800;900&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className="bg-[#061325] text-[#FFF8EA] antialiased min-h-screen selection:bg-[#FFD884] selection:text-[#061325]">
+      <body className="bg-[#FFF7E6] text-[#173331] font-sans antialiased min-h-screen selection:bg-[#F97316] selection:text-[#FFF7E6]">
         {children}
       </body>
     </html>

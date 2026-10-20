@@ -7,17 +7,19 @@ const STORAGE_KEYS = {
   EDITIONS: 'elite_stars_editions',
   ACTIVE_EDITION_ID: 'elite_stars_active_edition_id',
   STUDENTS: 'elite_stars_students',
-  VERSION: 'elite_stars_data_version_v3',
+  VERSION: 'elite_stars_data_version_v6_saved',
 };
 
-// Auto-purge any old fake data from previous demo runs
+// Seed or update localStorage with mock students and default configuration
 if (typeof window !== 'undefined') {
   try {
-    const isCleaned = localStorage.getItem(STORAGE_KEYS.VERSION);
-    if (!isCleaned) {
-      localStorage.removeItem(STORAGE_KEYS.STUDENTS);
-      localStorage.removeItem(STORAGE_KEYS.EDITIONS);
-      localStorage.setItem(STORAGE_KEYS.VERSION, 'true');
+    const currentVersion = localStorage.getItem(STORAGE_KEYS.VERSION);
+    if (currentVersion !== 'v6') {
+      localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(INITIAL_STUDENTS));
+      localStorage.setItem(STORAGE_KEYS.EDITIONS, JSON.stringify([INITIAL_EDITION]));
+      localStorage.setItem(STORAGE_KEYS.SCHOOL, JSON.stringify(INITIAL_SCHOOL_CONFIG));
+      localStorage.setItem(STORAGE_KEYS.ACTIVE_EDITION_ID, INITIAL_EDITION.id);
+      localStorage.setItem(STORAGE_KEYS.VERSION, 'v6');
     }
   } catch (e) {
     // ignore
@@ -80,6 +82,10 @@ export function getActiveEdition(): WeeklyEdition {
 // Students
 export function getStoredStudents(editionId?: string): Student[] {
   const allStudents = getLocalItem<Student[]>(STORAGE_KEYS.STUDENTS, INITIAL_STUDENTS);
+  if (!allStudents || allStudents.length === 0) {
+    setLocalItem(STORAGE_KEYS.STUDENTS, INITIAL_STUDENTS);
+    return INITIAL_STUDENTS;
+  }
   if (!editionId) return allStudents;
   return allStudents;
 }
@@ -102,7 +108,7 @@ export function createNewEdition(data: {
     academicYear: data.academicYear,
     isPublished: true,
     publishedAt: new Date().toISOString().split('T')[0],
-    totalStudents: 0,
+    totalStudents: INITIAL_STUDENTS.length,
     celestialQuote: 'كل طالب يضيء بطريقته.. ومعاً نصنع كوكبة من التميز',
     clusters: INITIAL_EDITION.clusters,
   };
@@ -116,8 +122,8 @@ export function createNewEdition(data: {
 // Reset Data
 export function resetToDemo(): void {
   if (typeof window === 'undefined') return;
-  localStorage.removeItem(STORAGE_KEYS.SCHOOL);
-  localStorage.removeItem(STORAGE_KEYS.EDITIONS);
-  localStorage.removeItem(STORAGE_KEYS.ACTIVE_EDITION_ID);
-  localStorage.removeItem(STORAGE_KEYS.STUDENTS);
+  setLocalItem(STORAGE_KEYS.SCHOOL, INITIAL_SCHOOL_CONFIG);
+  setLocalItem(STORAGE_KEYS.EDITIONS, [INITIAL_EDITION]);
+  setLocalItem(STORAGE_KEYS.ACTIVE_EDITION_ID, INITIAL_EDITION.id);
+  setLocalItem(STORAGE_KEYS.STUDENTS, INITIAL_STUDENTS);
 }

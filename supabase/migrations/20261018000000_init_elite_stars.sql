@@ -32,6 +32,7 @@ create table if not exists public.weekly_editions (
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+
 -- 3. Create Student Recognitions Table
 create table if not exists public.student_recognitions (
   id uuid primary key default gen_random_uuid(),

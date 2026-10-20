@@ -368,25 +368,30 @@ export default function AdminModal({
                         </select>
                       </div>
 
-                      {/* Cluster Group (1 to 4) */}
+                      {/* Primary Distinction Badge */}
                       <div>
                         <label className="block text-xs font-semibold text-[#FFF8EA] mb-1">
-                          الكوكبة التابع لها (1 - 4):
+                          وسام التميز والتكريم (يظهر على بطاقة الطالب):
                         </label>
                         <select
-                          value={editingStudent.clusterGroup}
-                          onChange={(e) =>
+                          value={editingStudent.badges?.[0] || 'الانضباط والالتزام'}
+                          onChange={(e) => {
+                            const newBadge = e.target.value;
+                            const otherBadges = (editingStudent.badges || []).slice(1);
                             setEditingStudent({
                               ...editingStudent,
-                              clusterGroup: Number(e.target.value),
-                            })
-                          }
+                              badges: [newBadge, ...otherBadges],
+                            });
+                          }}
                           className="w-full px-3 py-2 rounded-xl bg-[#071B37] border border-[#EFC16C]/40 text-sm text-[#FFF8EA]"
                         >
-                          <option value={1}>كوكبة الإشراق (المجموعة 1)</option>
-                          <option value={2}>كوكبة الإبداع (المجموعة 2)</option>
-                          <option value={3}>كوكبة العطاء (المجموعة 3)</option>
-                          <option value={4}>كوكبة الروّاد (المجموعة 4)</option>
+                          <option value="الانضباط والالتزام">الانضباط والالتزام ⭐</option>
+                          <option value="التميز الأكاديمي">التميز الأكاديمي 🎓</option>
+                          <option value="السلوك الإيجابي">السلوك الإيجابي ❤️</option>
+                          <option value="المشاركة الفعالة">المشاركة الفعالة ✨</option>
+                          <option value="القدوة الحسنة">القدوة الحسنة 🏆</option>
+                          <option value="الإبداع والابتكار">الإبداع والابتكار 💡</option>
+                          <option value="شغف القراءة">شغف القراءة 📖</option>
                         </select>
                       </div>
 
@@ -512,7 +517,7 @@ export default function AdminModal({
                               <th className="p-3">الطالب</th>
                               <th className="p-3">الصف</th>
                               <th className="p-3">المجال</th>
-                              <th className="p-3">الكوكبة</th>
+                              <th className="p-3">وسام التميز</th>
                               <th className="p-3 text-center">إجراءات</th>
                             </tr>
                           </thead>
@@ -534,7 +539,7 @@ export default function AdminModal({
                                 </td>
                                 <td className="p-3 text-[#FFF8EA]/80">{st.className}</td>
                                 <td className="p-3 text-[#FFD884]">{st.category}</td>
-                                <td className="p-3 text-[#FFF8EA]/80">مجموعة {st.clusterGroup}</td>
+                                <td className="p-3 text-[#FFD884] font-semibold">{st.badges?.[0] || 'الانضباط والالتزام'}</td>
                                 <td className="p-3 text-center">
                                   <div className="flex items-center justify-center gap-2">
                                     <button

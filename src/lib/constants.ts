@@ -1,4 +1,5 @@
 import { Student, WeeklyEdition, SchoolConfig, CategoryItem } from '@/types';
+import { DEMO_SCHOOL_STUDENTS } from './schoolData';
 
 export const INITIAL_SCHOOL_CONFIG: SchoolConfig = {
   name: 'مدارس نخبة الشمال الأهلية والعالمية',
@@ -43,12 +44,12 @@ export const CATEGORIES: CategoryItem[] = [
 
 export const INITIAL_EDITION: WeeklyEdition = {
   id: 'week-01-1446',
-  title: 'الأسبوع الأول - الفصل الدراسي الأول 1446هـ',
+  title: 'الأسبوع الأول - الفصل الدراسي الأول 1448هـ',
   weekNumber: 1,
-  academicYear: '1446هـ',
+  academicYear: '1448هـ',
   isPublished: true,
   publishedAt: new Date().toISOString().split('T')[0],
-  totalStudents: 0,
+  totalStudents: DEMO_SCHOOL_STUDENTS.length,
   celestialQuote: 'كل طالب يضيء بطريقته.. ومعاً نصنع كوكبة من التميز',
   clusters: [
     { id: 1, name: 'كوكبة الإشراق', description: 'المجموعة الأولى من نجوم التميز' },
@@ -58,5 +59,5 @@ export const INITIAL_EDITION: WeeklyEdition = {
   ],
 };
 
-// All fake demo student records removed. Clean slate for real school data.
-export const INITIAL_STUDENTS: Student[] = [];
+// All mock demo student records persisted as initial data
+export const INITIAL_STUDENTS: Student[] = DEMO_SCHOOL_STUDENTS;
