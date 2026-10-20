@@ -41,46 +41,104 @@ export default function SchoolClassroomAwardsPrototype({
   onClose,
   autoPlay = true,
 }: SchoolClassroomAwardsPrototypeProps) {
-  // Audio state (muted by default)
-  const [isMuted, setIsMuted] = useState(true);
-  const audioCtxRef = useRef<AudioContext | null>(null);
+  // 1. Ceremonial Opening Music (/Ascending_the_Stage.mp3)
+  const [isMuted, setIsMuted] = useState(false);
+  const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Play ceremonial chimes
-  const playChime = (freq: number = 523.25, type: 'reveal' | 'fanfare' = 'reveal') => {
-    if (isMuted) return;
-    try {
-      if (!audioCtxRef.current) {
-        const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-        audioCtxRef.current = new AudioCtx();
+  // Initialize and play ceremonial opening soundtrack
+  useEffect(() => {
+    const audio = new Audio('/Ascending_the_Stage.mp3');
+    audio.loop = true;
+    audio.preload = 'auto';
+    audio.volume = 0.7;
+    audioRef.current = audio;
+
+    // Attempt autoplay immediately
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsPlayingMusic(true);
+          setIsMuted(false);
+        })
+        .catch(() => {
+          // Browser autoplay restriction before user interaction
+          setIsPlayingMusic(false);
+          setIsMuted(true);
+        });
+    }
+
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+      audioRef.current = null;
+    };
+  }, []);
+
+  // Unlock audio on first user gesture if browser blocked initial autoplay
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      if (audioRef.current && audioRef.current.paused) {
+        audioRef.current.muted = false;
+        audioRef.current
+          .play()
+          .then(() => {
+            setIsPlayingMusic(true);
+            setIsMuted(false);
+          })
+          .catch(() => {});
       }
-      const ctx = audioCtxRef.current;
-      if (ctx.state === 'suspended') {
-        ctx.resume();
-      }
+    };
 
-      const now = ctx.currentTime;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
+    window.addEventListener('click', handleFirstInteraction, { once: true });
+    window.addEventListener('touchstart', handleFirstInteraction, { once: true });
 
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(freq, now);
-      if (type === 'fanfare') {
-        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + 0.35);
-      }
+    return () => {
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+    };
+  }, []);
 
-      gain.gain.setValueAtTime(0.001, now);
-      gain.gain.exponentialRampToValueAtTime(0.2, now + 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + (type === 'fanfare' ? 1.4 : 0.8));
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + (type === 'fanfare' ? 1.5 : 0.9));
-    } catch {
-      // AudioContext not allowed
+  // Toggle Mute / Unmute
+  const toggleSound = () => {
+    if (!audioRef.current) return;
+    if (isMuted || audioRef.current.paused) {
+      audioRef.current.muted = false;
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlayingMusic(true);
+          setIsMuted(false);
+        })
+        .catch(() => {});
+    } else {
+      audioRef.current.pause();
+      setIsPlayingMusic(false);
+      setIsMuted(true);
     }
   };
+
+  const handleReplay = () => {
+    setCurrentStep(0);
+    setIsPlaying(true);
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      if (!isMuted) {
+        audioRef.current.play().catch(() => {});
+      }
+    }
+  };
+
+  const handleClose = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    if (onClose) onClose();
+  };
+
+  // Optional subtle fanfare chime helper
+  const playChime = (_freq?: number, _type?: string) => {};
 
   // Local students state with dynamic fetch fallback
   const [localStudents, setLocalStudents] = useState<Student[]>(students || []);
@@ -430,6 +488,17 @@ export default function SchoolClassroomAwardsPrototype({
                     <span className="text-xs sm:text-sm font-black text-white">أ. طه شوقي</span>
                   </div>
                 </div>
+
+                {/* Prompt to unlock music if browser blocked autoplay */}
+                {isMuted && (
+                  <button
+                    onClick={toggleSound}
+                    className="mt-3.5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#FFF2B2] via-[#FFD884] to-[#F59E0B] text-[#05211E] text-xs font-black shadow-[0_0_20px_rgba(255,216,132,0.8)] animate-pulse hover:scale-105 transition-all cursor-pointer"
+                  >
+                    <Volume2 className="w-3.5 h-3.5 text-[#B45309]" />
+                    <span>تشغيل موسيقى الافتتاح 🎵</span>
+                  </button>
+                )}
               </div>
             </motion.div>
           )}
@@ -567,10 +636,7 @@ export default function SchoolClassroomAwardsPrototype({
         {/* Step Indicator & Replay */}
         <div className="flex items-center gap-1 sm:gap-2 bg-[#041B18]/90 backdrop-blur-md px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl border border-[#D4A853]/40 shadow-lg">
           <button
-            onClick={() => {
-              setCurrentStep(0);
-              setIsPlaying(true);
-            }}
+            onClick={handleReplay}
             className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-[#FFD884] hover:text-white transition-colors cursor-pointer p-0.5"
             title="إعادة العرض"
           >
@@ -615,21 +681,23 @@ export default function SchoolClassroomAwardsPrototype({
         {/* Audio Mute/Unmute & Skip */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <button
-            onClick={() => setIsMuted(!isMuted)}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl sm:rounded-2xl bg-[#041B18]/90 backdrop-blur-md border border-[#D4A853]/40 text-[10px] sm:text-xs font-bold text-[#FFD884] hover:text-white transition-all shadow-lg cursor-pointer"
-            title={isMuted ? 'تفعيل الصوت' : 'كتم الصوت'}
+            onClick={toggleSound}
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl sm:rounded-2xl bg-[#041B18]/90 backdrop-blur-md border border-[#D4A853]/40 text-[10px] sm:text-xs font-bold text-[#FFD884] hover:text-white transition-all shadow-lg cursor-pointer"
+            title={isMuted ? 'تشغيل موسيقى الافتتاح' : 'كتم الصوت'}
           >
             {isMuted ? (
               <VolumeX className="w-3.5 h-3.5 text-amber-400" />
             ) : (
-              <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
+              <Volume2 className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
             )}
-            <span className="hidden sm:inline">{isMuted ? 'الصوت صامت' : 'مفعّل'}</span>
+            <span className="hidden sm:inline">
+              {isMuted ? 'تشغيل الموسيقى' : 'موسيقى الافتتاح 🎵'}
+            </span>
           </button>
 
           {onClose && (
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="flex items-center gap-1 px-2.5 sm:px-3.5 py-1.5 rounded-xl sm:rounded-2xl bg-[#F97316] hover:bg-[#EA580C] text-[#FFF8EA] text-[11px] sm:text-xs font-black transition-all shadow-[0_4px_15px_rgba(249,115,22,0.4)] cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
