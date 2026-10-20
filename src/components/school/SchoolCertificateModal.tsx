@@ -411,7 +411,7 @@ export default function SchoolCertificateModal({
                   المدير التنفيذي
                 </span>
                 <span className="text-xs sm:text-sm font-black text-[#0B2545]">
-                  أ. عيد بن قيران العنيزي
+                  أ. عيد بن قيران العنزي
                 </span>
               </div>
 

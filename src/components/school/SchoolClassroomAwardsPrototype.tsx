@@ -422,7 +422,7 @@ export default function SchoolClassroomAwardsPrototype({
                 <div className="pt-3 border-t border-[#D4A853]/40 flex items-center justify-around gap-2 text-[#FFF8EA]">
                   <div>
                     <span className="text-[9.5px] sm:text-[10px] text-[#FFD884] font-bold block">المدير التنفيذي</span>
-                    <span className="text-xs sm:text-sm font-black text-white">أ. عيد بن قيران العنيزي</span>
+                    <span className="text-xs sm:text-sm font-black text-white">أ. عيد بن قيران العنزي</span>
                   </div>
                   <div className="w-[1px] h-7 bg-[#D4A853]/40" />
                   <div>

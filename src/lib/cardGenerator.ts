@@ -396,13 +396,13 @@ export async function generateStudentCardPNG(
   draw3DStar(ctx, width / 2, sigLineY + 45, 14);
   ctx.restore();
 
-  // Left Signatory: المدير التنفيذي (أ. عيد بن قيران العنيزي)
+  // Left Signatory: المدير التنفيذي (أ. عيد بن قيران العنزي)
   ctx.fillStyle = '#8B6E32';
   ctx.font = 'bold 20px "Tajawal", "Cairo", sans-serif';
   ctx.fillText('المدير التنفيذي', width - 240, sigLineY + 35);
   ctx.fillStyle = '#0C2340';
   ctx.font = '900 25px "Tajawal", "Cairo", sans-serif';
-  ctx.fillText('أ. عيد بن قيران العنيزي', width - 240, sigLineY + 68);
+  ctx.fillText('أ. عيد بن قيران العنزي', width - 240, sigLineY + 68);
 
   // 15. Footer Copyright & Academic Year
   ctx.fillStyle = '#1E5162';
