@@ -11,6 +11,7 @@ interface SchoolHeroProps {
   edition: WeeklyEdition;
   totalStudents: number;
   onExploreClick: () => void;
+  onPlayCinematic?: () => void;
 }
 
 export default function SchoolHero({
@@ -18,6 +19,7 @@ export default function SchoolHero({
   edition,
   totalStudents,
   onExploreClick,
+  onPlayCinematic,
 }: SchoolHeroProps) {
   return (
     <section className="relative w-full overflow-hidden text-center pt-6 pb-8 px-4">
@@ -145,16 +147,26 @@ export default function SchoolHero({
             </div>
           </div>
 
-          {/* Big Vibrant Orange Primary Action Button */}
-          <button
-            onClick={onExploreClick}
-            className="w-full py-3.5 px-6 rounded-2xl bg-[#F97316] hover:bg-[#EA580C] text-[#FFF7E6] font-black text-sm sm:text-base flex items-center justify-center gap-3 shadow-[0_6px_20px_rgba(249,115,22,0.35)] transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border-2 border-white/40"
-          >
-            <span>استعرض نجوم هذا الأسبوع</span>
-            <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-[#FFF7E6]">
+          {/* Dual Action Buttons: Explore & Cinematic Replay */}
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <button
+              onClick={onExploreClick}
+              className="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-[#F97316] hover:bg-[#EA580C] text-[#FFF7E6] font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(249,115,22,0.35)] transition-all cursor-pointer border-2 border-white/40"
+            >
+              <span>استعرض الفصول والنجوم</span>
               <ChevronDown className="w-4 h-4 animate-bounce" />
-            </div>
-          </button>
+            </button>
+
+            {onPlayCinematic && (
+              <button
+                onClick={onPlayCinematic}
+                className="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-[#0B3D3A] hover:bg-[#072523] text-[#D4A853] hover:text-[#FFF7E6] font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(11,61,58,0.25)] border-2 border-[#D4A853] transition-all cursor-pointer group"
+              >
+                <Sparkles className="w-4 h-4 text-[#D4A853] group-hover:rotate-12 transition-transform" />
+                <span>العرض السينمائي للنجوم 🎬</span>
+              </button>
+            )}
+          </div>
         </div>
 
       </div>

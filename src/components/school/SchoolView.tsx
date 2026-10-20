@@ -8,6 +8,7 @@ import SchoolClassesGrid from './SchoolClassesGrid';
 import SchoolClassroomShowcase from './SchoolClassroomShowcase';
 import SchoolCertificateModal from './SchoolCertificateModal';
 import SchoolBottomBar from './SchoolBottomBar';
+import SchoolCinematicIntro from './SchoolCinematicIntro';
 
 interface SchoolViewProps {
   school: SchoolConfig;
@@ -32,6 +33,7 @@ export default function SchoolView({
   const [viewMode, setViewMode] = useState<'grid' | 'showcase'>('grid');
   const [selectedClass, setSelectedClass] = useState<SchoolClassInfo>(SCHOOL_CLASSES[0]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [isCinematicOpen, setIsCinematicOpen] = useState(true);
 
   const classesSectionRef = useRef<HTMLDivElement | null>(null);
 
@@ -56,6 +58,7 @@ export default function SchoolView({
         edition={edition}
         totalStudents={effectiveStudents.length}
         onExploreClick={handleExploreClick}
+        onPlayCinematic={() => setIsCinematicOpen(true)}
       />
 
       {/* 2. Classes Section Anchor */}
@@ -91,6 +94,19 @@ export default function SchoolView({
         student={selectedStudent}
         school={school}
         onClose={() => setSelectedStudent(null)}
+      />
+
+      {/* 6. Grand Cinematic Opening Animation (Student by Student with Celebrations) */}
+      <SchoolCinematicIntro
+        school={school}
+        edition={edition}
+        students={effectiveStudents}
+        isOpen={isCinematicOpen}
+        onClose={() => setIsCinematicOpen(false)}
+        onOpenCertificate={(st) => {
+          setIsCinematicOpen(false);
+          setSelectedStudent(st);
+        }}
       />
 
     </div>
