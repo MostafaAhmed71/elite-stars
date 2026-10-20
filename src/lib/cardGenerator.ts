@@ -365,10 +365,49 @@ export async function generateStudentCardPNG(
     ctx.fillText(label, curX + bW / 2, bRowY + 110);
   });
 
-  // 14. Footer Copyright & Academic Year
-  ctx.fillStyle = '#1E5162';
+  // 14. Official Endorsement & Signatures
+  const sigLineY = 1375;
+  ctx.strokeStyle = 'rgba(212, 168, 83, 0.45)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(120, sigLineY);
+  ctx.lineTo(width - 120, sigLineY);
+  ctx.stroke();
+
+  // Right Signatory: رائد النشاط (أ. طه شوقي)
+  ctx.textAlign = 'center';
+  ctx.direction = 'rtl';
+  ctx.fillStyle = '#8B6E32';
   ctx.font = 'bold 20px "Tajawal", "Cairo", sans-serif';
-  ctx.fillText('جميع حقوق التكريم والتقدير محفوظة لأبنائنا وبناتنا النجوم © 1448هـ', width / 2, 1450);
+  ctx.fillText('رائد النشاط', 240, sigLineY + 35);
+  ctx.fillStyle = '#0C2340';
+  ctx.font = '900 25px "Tajawal", "Cairo", sans-serif';
+  ctx.fillText('أ. طه شوقي', 240, sigLineY + 68);
+
+  // Center Seal
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(width / 2, sigLineY + 45, 26, 0, Math.PI * 2);
+  ctx.fillStyle = '#FAF6EC';
+  ctx.fill();
+  ctx.strokeStyle = '#D4A853';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  draw3DStar(ctx, width / 2, sigLineY + 45, 14);
+  ctx.restore();
+
+  // Left Signatory: المدير التنفيذي (أ. عيد بن قيران العنيزي)
+  ctx.fillStyle = '#8B6E32';
+  ctx.font = 'bold 20px "Tajawal", "Cairo", sans-serif';
+  ctx.fillText('المدير التنفيذي', width - 240, sigLineY + 35);
+  ctx.fillStyle = '#0C2340';
+  ctx.font = '900 25px "Tajawal", "Cairo", sans-serif';
+  ctx.fillText('أ. عيد بن قيران العنيزي', width - 240, sigLineY + 68);
+
+  // 15. Footer Copyright & Academic Year
+  ctx.fillStyle = '#1E5162';
+  ctx.font = 'bold 18px "Tajawal", "Cairo", sans-serif';
+  ctx.fillText('مدارس نخبة الشمال الأهلية والعالمية • العام الدراسي 1448هـ', width / 2, 1475);
 
   // Trigger download
   canvas.toBlob((blob) => {

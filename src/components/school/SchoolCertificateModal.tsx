@@ -243,7 +243,7 @@ export default function SchoolCertificateModal({
             {/* ======================================================== */}
             <div className="relative z-10 flex flex-col items-center my-2 sm:my-3">
               <div className="relative w-36 h-36 sm:w-42 sm:h-42 flex items-center justify-center">
-                
+
                 {/* Majestic Sculpted Gold Laurel Wreath SVG */}
                 <svg
                   viewBox="0 0 180 180"
@@ -301,7 +301,7 @@ export default function SchoolCertificateModal({
             {/* ======================================================== */}
             <div className="relative z-10 max-w-[300px] sm:max-w-xs mx-auto mt-2 mb-2">
               <div className="relative rounded-2xl bg-white/95 border-2 border-[#D4A853] py-2.5 px-4 shadow-sm">
-                
+
                 {/* Plaque Classical Corner Filigree */}
                 <div className="absolute -top-1 -left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-[#0B2545]" />
                 <div className="absolute -top-1 -right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-[#0B2545]" />
@@ -358,7 +358,7 @@ export default function SchoolCertificateModal({
             {/* SECTION 7: 4 GILDED HONOR MEDALLIONS                     */}
             {/* ======================================================== */}
             <div className="relative z-10 grid grid-cols-4 gap-1.5 sm:gap-2 max-w-[360px] mx-auto mt-2.5">
-              
+
               {/* Medallion 1: قدوة حسنة */}
               <div className="flex flex-col items-center justify-center p-1.5 rounded-xl bg-white/95 border border-[#D4A853]/60 shadow-xs">
                 <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#0B2545] text-[#D4A853] flex items-center justify-center mb-1 shadow-xs">
@@ -399,6 +399,36 @@ export default function SchoolCertificateModal({
                 </span>
               </div>
 
+            </div>
+
+            {/* ======================================================== */}
+            {/* SECTION 8: OFFICIAL ENDORSEMENT & SIGNATURES             */}
+            {/* ======================================================== */}
+            <div className="relative z-10 mt-3 pt-2.5 border-t border-[#D4A853]/40 flex items-center justify-between px-2 sm:px-4 text-[#0B2545]">
+              {/* Right in RTL (اليمين): Executive Director */}
+              <div className="text-center">
+                <span className="text-[10px] sm:text-[11px] font-bold text-[#8B6E32] block">
+                  المدير التنفيذي
+                </span>
+                <span className="text-xs sm:text-sm font-black text-[#0B2545]">
+                  أ. عيد بن قيران العنيزي
+                </span>
+              </div>
+
+              {/* Center: Official Seal Emblem */}
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-[#D4A853] bg-gradient-to-tr from-[#FFF7E6] to-[#F3E5AB] flex items-center justify-center shadow-xs">
+                <Award className="w-4 h-4 sm:w-5 sm:h-5 text-[#8B6E32]" />
+              </div>
+
+              {/* Left in RTL (اليسار): Activity Leader */}
+              <div className="text-center">
+                <span className="text-[10px] sm:text-[11px] font-bold text-[#8B6E32] block">
+                  رائد النشاط
+                </span>
+                <span className="text-xs sm:text-sm font-black text-[#0B2545]">
+                  أ. طه شوقي
+                </span>
+              </div>
             </div>
 
           </div>

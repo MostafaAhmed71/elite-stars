@@ -389,10 +389,54 @@ export default function SchoolClassroomAwardsPrototype({
       </AnimatePresence>
 
       {/* 3. STAGE CENTRAL HERO: STUDENTS STANDING ON STAGE (Vertically budgeted to never collide) */}
-      <main className="relative z-20 flex-1 flex flex-col items-center justify-end pb-2 sm:pb-5 min-h-0 w-full px-2 sm:px-8">
+      <main className="relative z-20 flex-1 flex flex-col items-center justify-center sm:justify-end pb-2 sm:pb-5 min-h-0 w-full px-2 sm:px-8">
         
+        {/* Step 0: Grand Opening Stage Prologue & Official Leadership Patronage */}
+        <AnimatePresence>
+          {currentStep === 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.88, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: -15 }}
+              transition={{ duration: 0.6 }}
+              className="my-auto max-w-sm sm:max-w-md w-full px-3 text-center z-30"
+            >
+              <div className="rounded-3xl bg-gradient-to-b from-[#052623]/95 via-[#093530]/95 to-[#041A18]/95 border-2 border-[#D4A853] p-5 sm:p-6 shadow-[0_0_40px_rgba(212,168,83,0.35)] backdrop-blur-md">
+                <div className="relative w-12 h-12 sm:w-14 sm:h-14 mx-auto rounded-full bg-white p-1 border-2 border-[#D4A853] shadow-md mb-2.5 overflow-hidden">
+                  <Image
+                    src={school.logoUrl || '/images/school-logo.jpg'}
+                    alt={school.name}
+                    fill
+                    className="object-contain p-0.5"
+                  />
+                </div>
+                
+                <h2 className="text-sm sm:text-lg font-black text-[#FFF8EA] drop-shadow-sm mb-1">
+                  حفل تكريم نجوم {activeGradeName}
+                </h2>
+                <p className="text-[11px] sm:text-xs font-bold text-[#FFD884] mb-3.5">
+                  فصل {activeClassSection} • {edition.title?.split('-')[0] || 'الأسبوع الأول'}
+                </p>
+
+                {/* Patronage Signatories */}
+                <div className="pt-3 border-t border-[#D4A853]/40 flex items-center justify-around gap-2 text-[#FFF8EA]">
+                  <div>
+                    <span className="text-[9.5px] sm:text-[10px] text-[#FFD884] font-bold block">المدير التنفيذي</span>
+                    <span className="text-xs sm:text-sm font-black text-white">أ. عيد بن قيران العنيزي</span>
+                  </div>
+                  <div className="w-[1px] h-7 bg-[#D4A853]/40" />
+                  <div>
+                    <span className="text-[9.5px] sm:text-[10px] text-[#FFD884] font-bold block">رائد النشاط</span>
+                    <span className="text-xs sm:text-sm font-black text-white">أ. طه شوقي</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Students Row on the Golden Circular Podium */}
-        <div className="relative w-full max-w-6xl mx-auto flex items-end justify-center gap-2.5 sm:gap-8 md:gap-12">
+        <div className={`relative w-full max-w-6xl mx-auto flex items-end justify-center gap-2.5 sm:gap-8 md:gap-12 ${currentStep === 0 ? 'hidden' : 'flex'}`}>
           {classStudents.map((student, index) => {
             const studentStep = index + 1;
             const isRevealed = currentStep >= studentStep;

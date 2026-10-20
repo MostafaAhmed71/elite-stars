@@ -19,7 +19,7 @@ export default function SchoolBottomBar({
 
       {/* 2. Values We Honor & 3. Mascot Boy with Speech Bubble */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        
+
         {/* Values We Honor Card */}
         <div className="rounded-3xl bg-white p-5 sm:p-6 text-[#173331] shadow-[0_8px_25px_rgba(11,61,58,0.06)] border-2 border-[#D4A853]/40 flex flex-col justify-between">
           <div className="flex items-center justify-center gap-2.5 mb-4">
@@ -63,7 +63,7 @@ export default function SchoolBottomBar({
 
         {/* Mascot Character with Speech Bubble */}
         <div className="rounded-3xl bg-white p-5 border-2 border-[#D4A853]/40 shadow-[0_8px_25px_rgba(11,61,58,0.06)] flex items-center gap-4 relative overflow-hidden">
-          
+
           <div className="relative w-22 h-22 sm:w-24 sm:h-24 shrink-0 rounded-2xl overflow-hidden border-2 border-[#D4A853] bg-[#E6F4F1] shadow-sm">
             <Image
               src="/images/theme-school/mascot_boy.jpg"
@@ -87,6 +87,48 @@ export default function SchoolBottomBar({
 
         </div>
 
+      </div>
+
+      {/* 3. Leadership & Patronage Honors Card */}
+      <div className="rounded-3xl bg-gradient-to-r from-[#062824] via-[#093530] to-[#041A18] border-2 border-[#D4A853] p-3 sm:p-5 text-white shadow-[0_8px_30px_rgba(0,0,0,0.25)] relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute top-0 right-1/4 w-72 h-36 bg-[#D4A853]/10 blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-row items-center justify-between gap-2 sm:gap-4 max-w-3xl mx-auto">
+          {/* Right (اليمين): Executive Director */}
+          <div className="flex-1 flex items-center gap-2 sm:gap-3 bg-[#031A17]/85 border border-[#D4A853]/60 px-3 py-2 sm:px-5 sm:py-3 rounded-2xl shadow-sm">
+            <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-[#996515] to-[#FFD884] p-0.5 flex items-center justify-center shrink-0">
+              <div className="w-full h-full rounded-[8px] sm:rounded-[10px] bg-[#0A3430] flex items-center justify-center text-[#FFD884]">
+                <Award className="w-4 h-4 sm:w-6 sm:h-6" />
+              </div>
+            </div>
+            <div className="text-right min-w-0">
+              <span className="text-[10px] sm:text-xs font-bold text-[#FFD884] block truncate">
+                المدير التنفيذي
+              </span>
+              <span className="text-[11px] sm:text-base font-black text-white block truncate">
+                أ. عيد بن قيران العنزي
+              </span>
+            </div>
+          </div>
+
+          {/* Left (اليسار): Activity Leader */}
+          <div className="flex-1 flex items-center gap-2 sm:gap-3 bg-[#031A17]/85 border border-[#D4A853]/60 px-3 py-2 sm:px-5 sm:py-3 rounded-2xl shadow-sm">
+            <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-[#996515] to-[#FFD884] p-0.5 flex items-center justify-center shrink-0">
+              <div className="w-full h-full rounded-[8px] sm:rounded-[10px] bg-[#0A3430] flex items-center justify-center text-[#FFD884]">
+                <GraduationCap className="w-4 h-4 sm:w-6 sm:h-6" />
+              </div>
+            </div>
+            <div className="text-right min-w-0">
+              <span className="text-[10px] sm:text-xs font-bold text-[#FFD884] block truncate">
+                رائد النشاط
+              </span>
+              <span className="text-[11px] sm:text-base font-black text-white block truncate">
+                أ. طه شوقي
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
