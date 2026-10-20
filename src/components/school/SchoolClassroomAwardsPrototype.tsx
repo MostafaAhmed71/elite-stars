@@ -44,6 +44,7 @@ export default function SchoolClassroomAwardsPrototype({
   // 1. Ceremonial Opening Music (/Ascending_the_Stage.mp3)
   const [isMuted, setIsMuted] = useState(false);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+  const [needsUserTap, setNeedsUserTap] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Initialize and play ceremonial opening soundtrack
@@ -51,7 +52,7 @@ export default function SchoolClassroomAwardsPrototype({
     const audio = new Audio('/Ascending_the_Stage.mp3');
     audio.loop = true;
     audio.preload = 'auto';
-    audio.volume = 0.7;
+    audio.volume = 0.8;
     audioRef.current = audio;
 
     // Attempt autoplay immediately
@@ -61,11 +62,13 @@ export default function SchoolClassroomAwardsPrototype({
         .then(() => {
           setIsPlayingMusic(true);
           setIsMuted(false);
+          setNeedsUserTap(false);
         })
         .catch(() => {
           // Browser autoplay restriction before user interaction
           setIsPlayingMusic(false);
           setIsMuted(true);
+          setNeedsUserTap(true);
         });
     }
 
@@ -76,29 +79,50 @@ export default function SchoolClassroomAwardsPrototype({
     };
   }, []);
 
-  // Unlock audio on first user gesture if browser blocked initial autoplay
-  useEffect(() => {
-    const handleFirstInteraction = () => {
-      if (audioRef.current && audioRef.current.paused) {
-        audioRef.current.muted = false;
-        audioRef.current
-          .play()
-          .then(() => {
-            setIsPlayingMusic(true);
-            setIsMuted(false);
-          })
-          .catch(() => {});
-      }
-    };
+  // Function to start music and begin/advance presentation immediately
+  const startMusicAndShow = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.muted = false;
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlayingMusic(true);
+          setIsMuted(false);
+          setNeedsUserTap(false);
+          if (currentStep === 0) {
+            setCurrentStep(1);
+          }
+        })
+        .catch(() => {
+          setNeedsUserTap(false);
+          if (currentStep === 0) setCurrentStep(1);
+        });
+    } else {
+      setNeedsUserTap(false);
+      if (currentStep === 0) setCurrentStep(1);
+    }
+  };
 
-    window.addEventListener('click', handleFirstInteraction, { once: true });
-    window.addEventListener('touchstart', handleFirstInteraction, { once: true });
-
-    return () => {
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-    };
-  }, []);
+  // Global screen tap handler to unlock audio anywhere
+  const handleGlobalScreenTap = () => {
+    if (audioRef.current && (audioRef.current.paused || isMuted)) {
+      audioRef.current.muted = false;
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlayingMusic(true);
+          setIsMuted(false);
+          setNeedsUserTap(false);
+          if (currentStep === 0) {
+            setCurrentStep(1);
+          }
+        })
+        .catch(() => {});
+    } else if (needsUserTap && currentStep === 0) {
+      startMusicAndShow();
+    }
+  };
 
   // Toggle Mute / Unmute
   const toggleSound = () => {
@@ -124,9 +148,14 @@ export default function SchoolClassroomAwardsPrototype({
     setIsPlaying(true);
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
-      if (!isMuted) {
-        audioRef.current.play().catch(() => {});
-      }
+      audioRef.current.muted = false;
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlayingMusic(true);
+          setIsMuted(false);
+        })
+        .catch(() => {});
     }
   };
 
@@ -229,22 +258,18 @@ export default function SchoolClassroomAwardsPrototype({
     let timer: NodeJS.Timeout;
 
     if (currentStep === 0) {
-      // Intro stage hold for 1.8s
+      // If browser blocked autoplay, wait for user tap so stars are never revealed in silence!
+      if (needsUserTap) return;
+
+      // Intro stage hold for 2s then advance to student 1
       timer = setTimeout(() => {
         setCurrentStep(1);
-        playChime(523.25, 'reveal');
-      }, 1800);
+      }, 2000);
     } else if (currentStep >= 1 && currentStep <= totalStudents) {
       // Hold each student spotlight for 2.6s
       timer = setTimeout(() => {
         const nextStep = currentStep + 1;
         setCurrentStep(nextStep);
-        if (nextStep <= totalStudents) {
-          playChime(587.33 + nextStep * 40, 'reveal');
-        } else {
-          // Reached group celebration
-          playChime(783.99, 'fanfare');
-        }
       }, 2600);
     } else if (currentStep > totalStudents) {
       // Final group hold for 4.5s then onComplete
@@ -254,14 +279,15 @@ export default function SchoolClassroomAwardsPrototype({
     }
 
     return () => clearTimeout(timer);
-  }, [currentStep, isPlaying, totalStudents]);
+  }, [currentStep, isPlaying, totalStudents, needsUserTap]);
 
   const isGroupMoment = currentStep > totalStudents;
 
   return (
     <div
       dir="rtl"
-      className="fixed inset-0 w-full h-[100dvh] z-[99999] overflow-hidden bg-[#031312] select-none font-sans flex flex-col justify-between"
+      onClick={handleGlobalScreenTap}
+      className="fixed inset-0 w-full h-[100dvh] z-[99999] overflow-hidden bg-[#031312] select-none font-sans flex flex-col justify-between cursor-pointer"
     >
       {/* 1. ULTRA HIGH FIDELITY STAGE BACKDROP */}
       <div className="absolute inset-0 w-full h-full pointer-events-none">
@@ -489,16 +515,18 @@ export default function SchoolClassroomAwardsPrototype({
                   </div>
                 </div>
 
-                {/* Prompt to unlock music if browser blocked autoplay */}
-                {isMuted && (
-                  <button
-                    onClick={toggleSound}
-                    className="mt-3.5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#FFF2B2] via-[#FFD884] to-[#F59E0B] text-[#05211E] text-xs font-black shadow-[0_0_20px_rgba(255,216,132,0.8)] animate-pulse hover:scale-105 transition-all cursor-pointer"
-                  >
-                    <Volume2 className="w-3.5 h-3.5 text-[#B45309]" />
-                    <span>تشغيل موسيقى الافتتاح 🎵</span>
-                  </button>
-                )}
+                {/* Prominent Golden Button to Start Ceremony with Music */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    startMusicAndShow();
+                  }}
+                  className="mt-4 w-full py-2.5 sm:py-3 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-[#FFF2B2] via-[#FFD884] to-[#F59E0B] hover:brightness-110 text-[#05211E] text-xs sm:text-sm font-black shadow-[0_0_25px_rgba(255,216,132,0.85)] animate-bounce flex items-center justify-center gap-2 cursor-pointer transition-all border-2 border-white"
+                >
+                  <Sparkles className="w-4 h-4 text-[#B45309]" />
+                  <span>اضغط لبدء الحفل مع الموسيقى 🎵</span>
+                  <Sparkles className="w-4 h-4 text-[#B45309]" />
+                </button>
               </div>
             </motion.div>
           )}
