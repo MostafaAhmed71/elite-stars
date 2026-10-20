@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Student } from '@/types';
-import { SchoolClassInfo, SCHOOL_CLASSES } from '@/lib/schoolData';
+import { SchoolClassInfo, SCHOOL_CLASSES, isStudentInClass } from '@/lib/schoolData';
 import { ChevronLeft, ChevronRight, ArrowRight, Star, Sparkles, Award } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -37,7 +37,7 @@ export default function SchoolClassroomShowcase({
   };
 
   const classStudents = students.filter(
-    (s) => s.className === currentClass.classSection || s.gradeLevel.includes(currentClass.gradeName)
+    (s) => isStudentInClass(s, currentClass.classSection, currentClass.gradeName)
   ).slice(0, 2);
 
   return (

@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Student } from '@/types';
-import { SchoolClassInfo, SCHOOL_CLASSES } from '@/lib/schoolData';
+import { SchoolClassInfo, SCHOOL_CLASSES, isStudentInClass } from '@/lib/schoolData';
 import { Users, ChevronLeft, Sparkles, Star, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -21,11 +21,7 @@ export default function SchoolClassesGrid({
   onSelectStudent,
 }: SchoolClassesGridProps) {
   const getStudentsForClass = (classSection: string, gradeName: string) => {
-    const matched = students.filter(
-      (s) => s.className === classSection || s.gradeLevel.includes(gradeName)
-    );
-    if (matched.length > 0) return matched.slice(0, 2);
-    return students.filter((s) => s.className === classSection).slice(0, 2);
+    return students.filter((s) => isStudentInClass(s, classSection, gradeName)).slice(0, 2);
   };
 
   return (

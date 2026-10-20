@@ -315,18 +315,27 @@ export default function AdminPage() {
                       {/* Class */}
                       <div>
                         <label className="block text-xs font-semibold text-[#FFFBF2] mb-1">
-                          الصف والفصل (مثال: 1/أ أو 2/ب):
+                          الفصل / الشعبة:
                         </label>
-                        <input
-                          type="text"
-                          required
+                        <select
                           value={editingStudent.className}
-                          onChange={(e) =>
-                            setEditingStudent({ ...editingStudent, className: e.target.value })
-                          }
-                          placeholder="مثال: 1/أ"
-                          className="w-full px-3 py-2.5 rounded-xl bg-[#071D2C] border border-[#FF7A00]/40 text-sm text-[#FFFBF2] focus:outline-none focus:border-[#FF7A00]"
-                        />
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            let autoGrade = editingStudent.gradeLevel;
+                            if (val.startsWith('1')) autoGrade = 'الصف الأول الابتدائي';
+                            else if (val.startsWith('2')) autoGrade = 'الصف الثاني الابتدائي';
+                            else if (val.startsWith('3')) autoGrade = 'الصف الثالث الابتدائي';
+                            setEditingStudent({ ...editingStudent, className: val, gradeLevel: autoGrade });
+                          }}
+                          className="w-full px-3 py-2.5 rounded-xl bg-[#071D2C] border border-[#FF7A00]/40 text-sm text-[#FFFBF2] focus:outline-none cursor-pointer"
+                        >
+                          <option value="1/أ">الصف الأول - 1/أ</option>
+                          <option value="1/ب">الصف الأول - 1/ب</option>
+                          <option value="2/أ">الصف الثاني - 2/أ</option>
+                          <option value="2/ب">الصف الثاني - 2/ب</option>
+                          <option value="3/أ">الصف الثالث - 3/أ</option>
+                          <option value="3/ب">الصف الثالث - 3/ب</option>
+                        </select>
                       </div>
 
                       {/* Grade */}
